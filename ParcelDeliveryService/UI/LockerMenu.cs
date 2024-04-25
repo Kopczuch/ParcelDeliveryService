@@ -99,8 +99,30 @@ namespace ParcelDeliveryService.UI
         private void ReceiveParcel()
         {
             Console.Clear();
-            Console.WriteLine("Not implemented");
+            Console.WriteLine("Go to your locker.");
+            var lockers = _lockerService.GetLockers();
 
+            foreach (var locker in lockers)
+            {
+                Console.WriteLine();
+                locker.Display();
+            }
+
+            Console.Write("Locker Id: ");
+            var lockerId = int.Parse(Console.ReadLine());
+
+            Console.Clear();
+            Console.WriteLine($"Locker #{lockerId}\n");
+            Console.Write("Provide parcel ID: ");
+            var parcelId = int.Parse(Console.ReadLine());
+
+            var result = _lockerService.ReceiveFromLocker(parcelId, lockerId);
+            _parcelService.PickUp(parcelId);
+
+            Console.Clear();
+            Console.WriteLine(result ? "Parcel received successfully." : "Parcel have not arrived yet.");
+
+            Console.WriteLine();
             Console.WriteLine("Press any key to continue...");
             Console.ReadLine();
         }

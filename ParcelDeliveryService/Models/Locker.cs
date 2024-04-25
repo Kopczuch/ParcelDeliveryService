@@ -22,6 +22,7 @@ namespace ParcelDeliveryService.Models
 
                 if (slot != null)
                 {
+                    slot.ParcelId = parcel.Id;
                     LockerHistory.Add(new LockerHistoryItem{ ParcelId = parcel.Id, SlotId = slot.Id, Deposited = DateTime.Now });
                     return slot.Id;
                 }
@@ -33,6 +34,7 @@ namespace ParcelDeliveryService.Models
 
                 if (slot != null)
                 {
+                    slot.ParcelId = parcel.Id;
                     LockerHistory.Add(new LockerHistoryItem { ParcelId = parcel.Id, SlotId = slot.Id, Deposited = DateTime.Now });
                     return slot.Id;
                 }
@@ -43,6 +45,7 @@ namespace ParcelDeliveryService.Models
             if (vacantSlot == null)
                 throw new Exception("No slots available");
 
+            vacantSlot.ParcelId = parcel.Id;
             LockerHistory.Add(new LockerHistoryItem { ParcelId = parcel.Id, SlotId = vacantSlot.Id, Deposited = DateTime.Now });
 
             return vacantSlot.Id;

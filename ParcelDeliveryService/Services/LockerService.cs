@@ -19,16 +19,16 @@ namespace ParcelDeliveryService.Services
                     {
                         new() { Id = 1, Size = Size.Small, Vacancy = VacancyState.Vacant },
                         new() { Id = 2, Size = Size.Small, Vacancy = VacancyState.Vacant },
-                        new() { Id = 3, Size = Size.Small, Vacancy = VacancyState.Reserved },
-                        new() { Id = 4, Size = Size.Small, Vacancy = VacancyState.Reserved },
+                        new() { Id = 3, Size = Size.Small, Vacancy = VacancyState.Vacant },
+                        new() { Id = 4, Size = Size.Small, Vacancy = VacancyState.Vacant },
                         new() { Id = 5, Size = Size.Small, Vacancy = VacancyState.Vacant },
-                        new() { Id = 6, Size = Size.Small, Vacancy = VacancyState.Occupied },
+                        new() { Id = 6, Size = Size.Small, Vacancy = VacancyState.Vacant },
                         new() { Id = 7, Size = Size.Medium, Vacancy = VacancyState.Vacant },
-                        new() { Id = 8, Size = Size.Medium, Vacancy = VacancyState.Occupied },
+                        new() { Id = 8, Size = Size.Medium, Vacancy = VacancyState.Vacant },
                         new() { Id = 9, Size = Size.Medium, Vacancy = VacancyState.Vacant },
-                        new() { Id = 10, Size = Size.Medium, Vacancy = VacancyState.Occupied },
+                        new() { Id = 10, Size = Size.Medium, Vacancy = VacancyState.Vacant },
                         new() { Id = 11, Size = Size.Large, Vacancy = VacancyState.Vacant },
-                        new() { Id = 12, Size = Size.Large, Vacancy = VacancyState.Occupied }
+                        new() { Id = 12, Size = Size.Large, Vacancy = VacancyState.Vacant }
                     }
                 },
 
@@ -39,16 +39,16 @@ namespace ParcelDeliveryService.Services
                     {
                         new() { Id = 1, Size = Size.Small, Vacancy = VacancyState.Vacant },
                         new() { Id = 2, Size = Size.Small, Vacancy = VacancyState.Vacant },
-                        new() { Id = 3, Size = Size.Small, Vacancy = VacancyState.Reserved },
-                        new() { Id = 4, Size = Size.Small, Vacancy = VacancyState.Reserved },
+                        new() { Id = 3, Size = Size.Small, Vacancy = VacancyState.Vacant },
+                        new() { Id = 4, Size = Size.Small, Vacancy = VacancyState.Vacant },
                         new() { Id = 5, Size = Size.Small, Vacancy = VacancyState.Vacant },
-                        new() { Id = 6, Size = Size.Small, Vacancy = VacancyState.Occupied },
+                        new() { Id = 6, Size = Size.Small, Vacancy = VacancyState.Vacant },
                         new() { Id = 7, Size = Size.Medium, Vacancy = VacancyState.Vacant },
-                        new() { Id = 8, Size = Size.Medium, Vacancy = VacancyState.Occupied },
+                        new() { Id = 8, Size = Size.Medium, Vacancy = VacancyState.Vacant },
                         new() { Id = 9, Size = Size.Medium, Vacancy = VacancyState.Vacant },
-                        new() { Id = 10, Size = Size.Medium, Vacancy = VacancyState.Occupied },
+                        new() { Id = 10, Size = Size.Medium, Vacancy = VacancyState.Vacant },
                         new() { Id = 11, Size = Size.Large, Vacancy = VacancyState.Vacant },
-                        new() { Id = 12, Size = Size.Large, Vacancy = VacancyState.Occupied }
+                        new() { Id = 12, Size = Size.Large, Vacancy = VacancyState.Vacant }
                     }
                 },
 
@@ -59,16 +59,16 @@ namespace ParcelDeliveryService.Services
                     {
                         new() { Id = 1, Size = Size.Small, Vacancy = VacancyState.Vacant },
                         new() { Id = 2, Size = Size.Small, Vacancy = VacancyState.Vacant },
-                        new() { Id = 3, Size = Size.Small, Vacancy = VacancyState.Reserved },
-                        new() { Id = 4, Size = Size.Small, Vacancy = VacancyState.Reserved },
+                        new() { Id = 3, Size = Size.Small, Vacancy = VacancyState.Vacant },
+                        new() { Id = 4, Size = Size.Small, Vacancy = VacancyState.Vacant },
                         new() { Id = 5, Size = Size.Small, Vacancy = VacancyState.Vacant },
-                        new() { Id = 6, Size = Size.Small, Vacancy = VacancyState.Occupied },
+                        new() { Id = 6, Size = Size.Small, Vacancy = VacancyState.Vacant },
                         new() { Id = 7, Size = Size.Medium, Vacancy = VacancyState.Vacant },
-                        new() { Id = 8, Size = Size.Medium, Vacancy = VacancyState.Occupied },
+                        new() { Id = 8, Size = Size.Medium, Vacancy = VacancyState.Vacant },
                         new() { Id = 9, Size = Size.Medium, Vacancy = VacancyState.Vacant },
-                        new() { Id = 10, Size = Size.Medium, Vacancy = VacancyState.Occupied },
+                        new() { Id = 10, Size = Size.Medium, Vacancy = VacancyState.Vacant },
                         new() { Id = 11, Size = Size.Large, Vacancy = VacancyState.Vacant },
-                        new() { Id = 12, Size = Size.Large, Vacancy = VacancyState.Occupied }
+                        new() { Id = 12, Size = Size.Large, Vacancy = VacancyState.Vacant }
                     }
                 }
             };
@@ -77,6 +77,11 @@ namespace ParcelDeliveryService.Services
         public IList<Locker> GetVacantLockers()
         {
             return _lockers.Where(l => l.Slots.Any(s => s.Vacancy == VacancyState.Vacant)).ToList();
+        }
+
+        public IList<Locker> GetLockers()
+        {
+            return _lockers;
         }
 
         public int DepositParcel(Parcel parcel, int lockerId)

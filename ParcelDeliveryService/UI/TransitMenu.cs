@@ -7,10 +7,14 @@ namespace ParcelDeliveryService.UI
     public class TransitMenu : IMenu
     {
         private readonly IParcelService _parcelService;
+        private readonly ILockerService _lockerService;
 
-        public TransitMenu(IParcelService parcelService)
+        public TransitMenu(
+            IParcelService parcelService,
+            ILockerService lockerService)
         {
             _parcelService = parcelService;
+            _lockerService = lockerService;
         }
 
         public void Run()
@@ -65,6 +69,15 @@ namespace ParcelDeliveryService.UI
                     return;
                 }
 
+                if (currentState == TransitEventType.PickedUp)
+                {
+                    Console.WriteLine("Parcel has been delivered.");
+                    Console.WriteLine();
+                    Console.WriteLine("Press any key to continue...");
+                    Console.ReadLine();
+                    return;
+                }
+
                 Console.WriteLine("Operations:");
                 Console.WriteLine("[1] Forward In Transit");
 
@@ -96,7 +109,14 @@ namespace ParcelDeliveryService.UI
 
         private void ForwardInTransit(Parcel parcel)
         {
+            if (parcel.CurrentState == TransitEventType.Deposited)
+                _lockerService.ReceiveFromLocker(parcel.Id, parcel.SenderLockerId!.Value);
+
             _parcelService.ForwardInTransit(parcel);
+
+            if (parcel.CurrentState == TransitEventType.ReadyForPickUp)
+                _lockerService.DepositParcel(parcel, parcel.RecipientLockerId);
+
         }
     }
 }

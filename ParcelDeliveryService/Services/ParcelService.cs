@@ -81,5 +81,15 @@ namespace ParcelDeliveryService.Services
                     break;
             }
         }
+
+        public void PickUp(int parcelId)
+        {
+            var parcel = GetParcel(parcelId);
+
+            if (parcel == null)
+                throw new NullReferenceException();
+
+            parcel.AddPickUpEvent();
+        }
     }
 }

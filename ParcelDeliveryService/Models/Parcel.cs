@@ -220,5 +220,17 @@ namespace ParcelDeliveryService.Models
 
             TransitHistory.Add(transitEvent);
         }
+
+        public void AddPickUpEvent()
+        {
+            var transitEvent = new TransitEvent
+            {
+                TimeStamp = DateTime.Now,
+                Location = "At Recipient",
+                Type = TransitEventType.PickedUp
+            };
+
+            TransitHistory.Add(transitEvent);
+        }
     }
 }

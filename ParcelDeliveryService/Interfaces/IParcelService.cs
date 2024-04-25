@@ -9,6 +9,7 @@ namespace ParcelDeliveryService.Interfaces
         IList<Parcel> ListParcels();
         Parcel? GetParcel(int parcelId);
         void ForwardInTransit(Parcel parcel);
+        void PickUp(int parcelId);
 
     }
 }
