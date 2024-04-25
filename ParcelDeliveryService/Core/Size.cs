@@ -2,10 +2,8 @@
 {
     public enum Size
     {
-        ExtraSmall,
         Small,
         Medium,
-        Large,
-        ExtraLarge
+        Large
     }
 }

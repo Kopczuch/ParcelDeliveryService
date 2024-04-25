@@ -1,0 +1,108 @@
+﻿using ParcelDeliveryService.Core;
+using ParcelDeliveryService.Interfaces;
+
+namespace ParcelDeliveryService.UI
+{
+    public class LockerMenu : IMenu
+    {
+        private readonly ILockerService _lockerService;
+        private readonly IParcelService _parcelService;
+
+        public LockerMenu(
+            ILockerService lockerService,
+            IParcelService parcelService)
+        {
+            _lockerService = lockerService;
+            _parcelService = parcelService;
+        }
+
+        public void Run()
+        {
+            while (true)
+            {
+                var requestedOperation = Menu();
+
+                if (int.TryParse(requestedOperation, out var operation))
+                {
+                    switch (operation)
+                    {
+                        case 1:
+                            DepositParcel();
+                            break;
+
+                        case 2:
+                            ReceiveParcel();
+                            break;
+
+                        case 0:
+                            return;
+                    }
+                }
+            }
+        }
+
+        private string? Menu()
+        {
+            Console.Clear();
+            Console.WriteLine("[1] Deposit Parcel");
+            Console.WriteLine("[2] Receive Parcel");
+            Console.WriteLine("[0] Go Back");
+
+            Console.WriteLine();
+            Console.Write("Choose Operation: ");
+            var operation = Console.ReadLine();
+
+            return operation;
+        }
+
+        private void DepositParcel()
+        {
+            Console.Clear();
+            Console.Write("Provide parcel ID: ");
+            var parcelId = int.Parse(Console.ReadLine());
+
+            var parcel = _parcelService.GetParcel(parcelId);
+            
+            if (parcel == null)
+                throw new NullReferenceException();
+
+            if (parcel.CurrentState != TransitEventType.Registered)
+            {
+                Console.WriteLine($"Parcel #{ parcel.Id } was already deposited. Press any key to continue...");
+                Console.ReadLine();
+                
+                return;
+            }
+
+            var availableLockers = _lockerService.GetVacantLockers();
+
+            foreach (var locker in availableLockers)
+            {
+                Console.WriteLine();
+                locker.Display();
+            }
+
+            Console.WriteLine();
+            Console.Write("Pass chosen locker ID: ");
+            var chosenLockerId = int.Parse(Console.ReadLine());
+
+            _lockerService.DepositParcel(parcel, chosenLockerId);
+            
+            parcel.SenderLockerId = chosenLockerId;
+            parcel.AddDepositEvent();
+
+            Console.WriteLine();
+            Console.WriteLine("Parcel deposit successful. Press any key to continue...");
+            Console.ReadLine();
+        }
+
+        private void ReceiveParcel()
+        {
+            Console.Clear();
+            Console.WriteLine("Not implemented");
+
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadLine();
+        }
+    }
+}

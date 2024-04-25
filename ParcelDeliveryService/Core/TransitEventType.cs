@@ -2,19 +2,15 @@
 {
     public enum TransitEventType
     {
-        ReadyToBeSent,
-        SentFromParcelLocker,
-        SentFromParcelStorage,
-        ReceivedByCourier,
-        InTransit,
+        Registered,
+        Deposited,
+        ReceivedFromSenderLocker,
         InStorage,
-        ReadyForDelivery,
+        InTransit,
         ReadyForPickUp,
         PickedUp,
         DeadlineApproaches,
         DeadlineOver,
-        ReturningToStorage,
-        ReturningToSender,
         InExternalStorage,
         Destroyed,
         Lost

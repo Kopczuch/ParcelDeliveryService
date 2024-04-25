@@ -1,12 +1,11 @@
-﻿using System.Net;
-using System.Net.Sockets;
+﻿using ParcelDeliveryService.Core;
 
 namespace ParcelDeliveryService.Models
 {
     public class TransitEvent
     {
         public DateTime TimeStamp { get; set; }
-        public Address Location { get; set; }
-        public TransitEvent Type { get; set; }
+        public string Location { get; set; }
+        public TransitEventType Type { get; set; }
     }
 }
