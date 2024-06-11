@@ -1,5 +1,6 @@
 ﻿using ParcelDeliveryService.Core;
 using ParcelDeliveryService.Interfaces;
+using ParcelDeliveryService.Models;
 
 namespace ParcelDeliveryService.UI
 {
@@ -7,13 +8,16 @@ namespace ParcelDeliveryService.UI
     {
         private readonly ILockerService _lockerService;
         private readonly IParcelService _parcelService;
+        private readonly IParcelRepository _parcelRepository;
 
         public LockerMenu(
             ILockerService lockerService,
-            IParcelService parcelService)
+            IParcelService parcelService,
+            IParcelRepository parcelRepository)
         {
             _lockerService = lockerService;
             _parcelService = parcelService;
+            _parcelRepository = parcelRepository;   
         }
 
         public void Run()
@@ -90,6 +94,8 @@ namespace ParcelDeliveryService.UI
             
             parcel.SenderLockerId = chosenLockerId;
             parcel.AddDepositEvent();
+
+            _parcelRepository.Update(parcel);
 
             Console.WriteLine();
             Console.WriteLine("Parcel deposit successful. Press any key to continue...");

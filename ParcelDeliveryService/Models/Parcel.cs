@@ -4,23 +4,20 @@ namespace ParcelDeliveryService.Models
 {
     public class Parcel
     {
-        public Parcel()
-        {
-            TransitHistory = new List<TransitEvent>();
-        }
-
-        public Parcel(string sender, string recipient, Size size, int recipientLockerId)
-        {
-            Sender = sender;
-            Recipient = recipient;
-            Size = size;
-            RecipientLockerId = recipientLockerId;
-            TransitHistory = new List<TransitEvent>();
-        }
-
         public int Id { get; set; }
         public string Sender { get; set; }
         public string Recipient { get; set; }
+        public DateTime EstimatedDeliveryTime { get; set; }
+        public DateTime GuaranteedDeliveryTime { get; set; }
+        public IList<TransitEvent> TransitHistory { get; set; }
+        public TransitEventType CurrentState => TransitHistory.Last().Type;
+        public DateTime? ActualDeliveryTime { get; set; }
+        public DateTime? ActualPickUpTime { get; set; }
+        public int? SenderLockerId { get; set; }
+        public int RecipientLockerId { get; set; }
+        public double Price { get; set; }
+        public bool PaidFor { get; set; } = false;
+        public double AdditionalCosts { get; set; } = 0.0;
 
         private Size _size;
         public Size Size
@@ -35,19 +32,33 @@ namespace ParcelDeliveryService.Models
             }
         }
 
-        public DateTime EstimatedDeliveryTime { get; set; }
-        public DateTime GuaranteedDeliveryTime { get; set; }
-        public IList<TransitEvent> TransitHistory { get; set; }
-        public TransitEventType CurrentState => TransitHistory.Last().Type;
-        public DateTime? ActualDeliveryTime { get; set; }
-        public DateTime? ActualPickUpTime { get; set; }
-        public int? SenderLockerId { get; set; }
-        public int RecipientLockerId { get; set; }
-        public double Price { get; set; }
-        public bool PaidFor { get; set; } = false;
-        public double AdditionalCosts { get; set; } = 0.0;
-        // Additional services
 
+        public Parcel()
+        {
+            TransitHistory = new List<TransitEvent>();
+        }
+
+        public Parcel(string sender, string recipient, Size size, int recipientLockerId)
+        {
+            Sender = sender;
+            Recipient = recipient;
+            Size = size;
+            RecipientLockerId = recipientLockerId;
+            TransitHistory = new List<TransitEvent>();
+        }
+
+        public Parcel(int id, string sender, string recipient, Size size, int recipientLockerId)
+        {
+            Id = id;
+            Sender = sender;
+            Recipient = recipient;
+            Size = size;
+            RecipientLockerId = recipientLockerId;
+            TransitHistory = new List<TransitEvent>();
+        }
+
+
+        // Additional services
         public void Display()
         {
             Console.WriteLine($"Id: { Id }");
@@ -72,6 +83,7 @@ namespace ParcelDeliveryService.Models
                 Console.WriteLine($"Timestamp: {transitEvent.TimeStamp}");
             }
         }
+
 
         private void EstimateDeliveryTime()
         {
