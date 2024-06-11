@@ -4,6 +4,31 @@ namespace ParcelDeliveryService.Models
 {
     public class Parcel
     {
+        public Parcel()
+        {
+            TransitHistory = new List<TransitEvent>();
+        }
+
+        public Parcel(string sender, string recipient, Size size, int recipientLockerId)
+        {
+            Sender = sender;
+            Recipient = recipient;
+            Size = size;
+            RecipientLockerId = recipientLockerId;
+            TransitHistory = new List<TransitEvent>();
+        }
+
+        public Parcel(int id, string sender, string recipient, Size size, int recipientLockerId)
+        {
+            Id = id;
+            Sender = sender;
+            Recipient = recipient;
+            Size = size;
+            RecipientLockerId = recipientLockerId;
+            TransitHistory = new List<TransitEvent>();
+        }
+
+
         public int Id { get; set; }
         public string Sender { get; set; }
         public string Recipient { get; set; }
@@ -30,31 +55,6 @@ namespace ParcelDeliveryService.Models
                 AssignGuaranteedDeliveryTime();
                 CalculateCost();
             }
-        }
-
-
-        public Parcel()
-        {
-            TransitHistory = new List<TransitEvent>();
-        }
-
-        public Parcel(string sender, string recipient, Size size, int recipientLockerId)
-        {
-            Sender = sender;
-            Recipient = recipient;
-            Size = size;
-            RecipientLockerId = recipientLockerId;
-            TransitHistory = new List<TransitEvent>();
-        }
-
-        public Parcel(int id, string sender, string recipient, Size size, int recipientLockerId)
-        {
-            Id = id;
-            Sender = sender;
-            Recipient = recipient;
-            Size = size;
-            RecipientLockerId = recipientLockerId;
-            TransitHistory = new List<TransitEvent>();
         }
 
 

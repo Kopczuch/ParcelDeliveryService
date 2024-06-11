@@ -112,7 +112,7 @@ namespace ParcelDeliveryService.UI
             if (parcel.CurrentState == TransitEventType.Deposited)
                 _lockerService.ReceiveFromLocker(parcel.Id, parcel.SenderLockerId!.Value);
 
-            _parcelService.ForwardInTransit(parcel.Id);
+            _parcelService.ForwardInTransit(parcel);
 
             if (parcel.CurrentState == TransitEventType.ReadyForPickUp)
                 _lockerService.DepositParcel(parcel, parcel.RecipientLockerId);
