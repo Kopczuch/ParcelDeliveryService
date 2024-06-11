@@ -34,6 +34,9 @@ namespace ParcelDeliveryService.UI
                         case 2:
                             TrackParcel();
                             break;
+                        case 3:
+                            CreateUser();
+                            break;
 
                         case 0:
                             return;
@@ -48,6 +51,7 @@ namespace ParcelDeliveryService.UI
             Console.Clear();
             Console.WriteLine("[1] Register Parcel");
             Console.WriteLine("[2] Track Parcel");
+            Console.WriteLine("[3] Add User");
             Console.WriteLine("[0] Go Back");
 
             Console.WriteLine();
@@ -181,6 +185,70 @@ namespace ParcelDeliveryService.UI
 
             Console.WriteLine();
             Console.WriteLine("Press any key to continue...");
+            Console.ReadLine();
+        }
+
+        public void CreateUser()
+        {
+            Console.Clear();
+            Console.WriteLine("Enter the following details to create a new user:");
+
+            Console.Write("Name: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Surname: ");
+            string surname = Console.ReadLine();
+
+            Console.Write("Phone Number: ");
+            string phoneNumber = Console.ReadLine();
+
+            Console.Write("Email: ");
+            string email = Console.ReadLine();
+
+            Console.Write("Password: ");
+            string password = Console.ReadLine();
+
+            Console.WriteLine("Enter Address Details:");
+            Console.Write("Country: ");
+            string country = Console.ReadLine();
+
+            Console.Write("City: ");
+            string city = Console.ReadLine();
+
+            Console.Write("Zip Code: ");
+            string zipCode = Console.ReadLine();
+
+            Console.Write("Street: ");
+            string street = Console.ReadLine();
+
+            Console.Write("Apartment number: ");
+            string apartment = Console.ReadLine();
+
+            
+
+            Address address = new Address
+            {
+                Country = country,
+                City = city,
+                Street = street,
+                PostalCode = zipCode,
+                StreetNumber = apartment
+            };
+
+            User newUser = new User
+            {
+                Name = name,
+                Surname = surname,
+                PhoneNumber = phoneNumber,
+                Email = email,
+                Password = password,
+                Address = address
+            };
+
+            // Assuming _userService is a service that handles user related operations
+            //_userService.AddUser(newUser);
+
+            Console.WriteLine("User created successfully. Press any key to continue...");
             Console.ReadLine();
         }
     }
