@@ -9,6 +9,8 @@ namespace ParcelDeliveryService.UI
         private readonly IParcelService _parcelService;
         private readonly ILockerService _lockerService;
 
+        //private readonly IUserService _userService;
+
         public UserPortalMenu(
             IParcelService parcelService,
             ILockerService lockerService)
@@ -37,6 +39,10 @@ namespace ParcelDeliveryService.UI
                         case 3:
                             CreateUser();
                             break;
+                        case 4:
+                            ShowUsers();
+                            break;
+                            
 
                         case 0:
                             return;
@@ -52,6 +58,7 @@ namespace ParcelDeliveryService.UI
             Console.WriteLine("[1] Register Parcel");
             Console.WriteLine("[2] Track Parcel");
             Console.WriteLine("[3] Add User");
+            Console.WriteLine("[4] Show Users");
             Console.WriteLine("[0] Go Back");
 
             Console.WriteLine();
@@ -251,5 +258,24 @@ namespace ParcelDeliveryService.UI
             Console.WriteLine("User created successfully. Press any key to continue...");
             Console.ReadLine();
         }
+
+        private void ShowUsers()
+        {
+            Console.Clear();
+
+            
+            
+            Console.WriteLine();
+            
+          
+
+            Console.WriteLine();
+           
+
+            Console.WriteLine();
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadLine();
+        }
+
     }
 }

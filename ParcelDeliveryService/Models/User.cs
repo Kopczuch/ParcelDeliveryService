@@ -15,7 +15,15 @@ namespace ParcelDeliveryService.Models
         public required string Password { get; set; }
         public required Address Address { get; set; }
 
-
+        public void Display()
+        {
+            Console.WriteLine($"Id: {Id}");
+            Console.WriteLine($"Name: {Name}");
+            Console.WriteLine($"Surname: {Surname}");
+            Console.WriteLine($"PhoneNumber: {PhoneNumber}");
+            Console.WriteLine($"Email: {Email}");
+            Console.WriteLine($"Address: {Address.Country}, {Address.City}, {Address.PostalCode}, {Address.Street} {Address.StreetNumber}");
+        }
         
     }
 
