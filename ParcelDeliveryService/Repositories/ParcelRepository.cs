@@ -28,7 +28,7 @@ namespace ParcelDeliveryService.Repositories
             _parcels.Add(parcel);
         }
 
-        public Parcel GetById(int id)
+        public Parcel? GetById(int id)
         {
             return _parcels.FirstOrDefault(p => p.Id == id);
         }
