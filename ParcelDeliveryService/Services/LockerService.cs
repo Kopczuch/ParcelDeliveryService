@@ -106,6 +106,16 @@ namespace ParcelDeliveryService.Services
             locker.ReserveSlot(parcel);
         }
 
+        public void ReleaseSlot(Parcel parcel, int lockerId)
+        {
+            var locker = _lockers.FirstOrDefault(l => l.Id == lockerId);
+
+            if (locker == null)
+                throw new NullReferenceException();
+
+            locker.ReleaseSlot(parcel);
+        }
+
         public bool ReceiveFromLocker(int parcelId, int lockerId)
         {
             var locker = _lockers.FirstOrDefault(l => l.Id == lockerId);

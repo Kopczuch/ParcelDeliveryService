@@ -296,6 +296,9 @@ namespace ParcelDeliveryService.UI
 
             var parcel = _parcelService.GetParcel(parcelId);
 
+            _lockerService.ReserveSlot(parcel, newLockerId);
+            _lockerService.ReleaseSlot(parcel, parcel.RecipientLockerId);
+
             _rerouteService.Reroute(parcel, newLockerId);
 
             Console.WriteLine();
