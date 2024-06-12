@@ -20,6 +20,7 @@ namespace ParcelDeliveryService.Repositories
                 new()
                 {
                     Id = 1,
+                    Address = new Address("Poland", "Krakow", "30-002", "Market Sq", "5"),
                     Slots = new List<Slot>
                     {
                         new() { Id = 1, Size = Size.Small, Vacancy = VacancyState.Vacant },
@@ -40,6 +41,7 @@ namespace ParcelDeliveryService.Repositories
                 new()
                 {
                     Id = 2,
+                    Address = new Address("Poland", "Gdansk", "80-003", "Long St", "10"),
                     Slots = new List<Slot>
                     {
                         new() { Id = 1, Size = Size.Small, Vacancy = VacancyState.Vacant },
@@ -60,6 +62,7 @@ namespace ParcelDeliveryService.Repositories
                 new()
                 {
                     Id = 3,
+                    Address = new Address("Poland", "Poznan", "60-004", "Old Town Rd", "15"),
                     Slots = new List<Slot>
                     {
                         new() { Id = 1, Size = Size.Small, Vacancy = VacancyState.Vacant },
@@ -82,7 +85,7 @@ namespace ParcelDeliveryService.Repositories
 
         public void Add(Locker locker)
         {
-            locker.Id = _lockers.Count;
+            locker.Id = _lockers.Count + 1;
             _lockers.Add(locker);  
         }
 
@@ -101,7 +104,7 @@ namespace ParcelDeliveryService.Repositories
             int index = _lockers.FindIndex(l =>  l.Id == locker.Id);
             if (index != -1)
             {
-                _lockers.Insert(index, locker);
+                _lockers[index] = locker;
             }
         }
 

@@ -29,7 +29,7 @@ namespace ParcelDeliveryService.Repositories
 
         public void Add(User user)
         {
-            user.Id = _users.Count;
+            user.Id = _users.Count + 1;
             _users.Add(user);
         }
 
@@ -57,7 +57,7 @@ namespace ParcelDeliveryService.Repositories
             int index = _users.FindIndex(u => u.Id == user.Id);
             if(index == -1)
             {
-                _users.Insert(index, user);
+                _users[index] = user;
             }
         }
     }
