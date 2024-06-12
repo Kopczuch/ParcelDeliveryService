@@ -1,12 +1,15 @@
 ﻿using ParcelDeliveryService.Core;
+using ParcelDeliveryService.Interfaces;
+using ParcelDeliveryService.Models.Parcels.ParcelStates;
 
-namespace ParcelDeliveryService.Models
+namespace ParcelDeliveryService.Models.Parcels
 {
     public class Parcel
     {
         public Parcel()
         {
             TransitHistory = new List<TransitEvent>();
+            State = new RegisteredState();
         }
 
         public Parcel(string sender, string recipient, Size size, int recipientLockerId)
@@ -16,9 +19,11 @@ namespace ParcelDeliveryService.Models
             Size = size;
             RecipientLockerId = recipientLockerId;
             TransitHistory = new List<TransitEvent>();
+            State = new RegisteredState();
         }
 
         public int Id { get; set; }
+        private ParcelState State { get; set; }
         public string Sender { get; set; }
         public string Recipient { get; set; }
 
@@ -38,7 +43,6 @@ namespace ParcelDeliveryService.Models
         public DateTime EstimatedDeliveryTime { get; set; }
         public DateTime GuaranteedDeliveryTime { get; set; }
         public IList<TransitEvent> TransitHistory { get; set; }
-        public TransitEventType CurrentState => TransitHistory.Last().Type;
         public DateTime? ActualDeliveryTime { get; set; }
         public DateTime? ActualPickUpTime { get; set; }
         public int? SenderLockerId { get; set; }
@@ -50,12 +54,12 @@ namespace ParcelDeliveryService.Models
 
         public void Display()
         {
-            Console.WriteLine($"Id: { Id }");
-            Console.WriteLine($"Sender: { Sender }");
-            Console.WriteLine($"Sender LockerMenu Id: { SenderLockerId }");
-            Console.WriteLine($"Recipient: { Recipient }");
-            Console.WriteLine($"Recipient LockerMenu Id: { RecipientLockerId }");
-            Console.WriteLine($"Size: { Size }");
+            Console.WriteLine($"Id: {Id}");
+            Console.WriteLine($"Sender: {Sender}");
+            Console.WriteLine($"Sender LockerMenu Id: {SenderLockerId}");
+            Console.WriteLine($"Recipient: {Recipient}");
+            Console.WriteLine($"Recipient LockerMenu Id: {RecipientLockerId}");
+            Console.WriteLine($"Size: {Size}");
             Console.WriteLine($"Estimated Delivery Time: {EstimatedDeliveryTime:d}");
             Console.WriteLine($"Guaranteed Delivery Time: {GuaranteedDeliveryTime:d}");
         }
@@ -111,6 +115,16 @@ namespace ParcelDeliveryService.Models
                 Price = 50;
         }
 
+        public void ForwardInTransit(ILockerService lockerService)
+        {
+            State.HandleForwardInTransit(this, lockerService);
+        }
+
+        public bool IsTransitFinished()
+        {
+            return State.IsTerminalState;
+        }
+
         public void AddRegistryEvent()
         {
             var transitEvent = new TransitEvent
@@ -132,6 +146,8 @@ namespace ParcelDeliveryService.Models
                 Type = TransitEventType.Deposited
             };
 
+            State = new DepositedState();
+
             TransitHistory.Add(transitEvent);
         }
 
@@ -143,6 +159,8 @@ namespace ParcelDeliveryService.Models
                 Location = "At Courier",
                 Type = TransitEventType.ReceivedFromSenderLocker
             };
+
+            State = new ReceivedFromSenderLockerState();
 
             TransitHistory.Add(transitEvent);
         }
@@ -156,6 +174,8 @@ namespace ParcelDeliveryService.Models
                 Type = TransitEventType.InStorage
             };
 
+            State = new InStorageState();
+
             TransitHistory.Add(transitEvent);
         }
 
@@ -168,6 +188,8 @@ namespace ParcelDeliveryService.Models
                 Type = TransitEventType.InTransit
             };
 
+            State = new InTransitState();
+
             TransitHistory.Add(transitEvent);
         }
 
@@ -176,11 +198,13 @@ namespace ParcelDeliveryService.Models
             var transitEvent = new TransitEvent
             {
                 TimeStamp = DateTime.Now,
-                Location = $"Locker #{ RecipientLockerId }",
+                Location = $"Locker #{RecipientLockerId}",
                 Type = TransitEventType.ReadyForPickUp
             };
 
             ActualDeliveryTime = DateTime.Now;
+
+            State = new ReadyForPickupState();
 
             TransitHistory.Add(transitEvent);
         }
@@ -190,9 +214,11 @@ namespace ParcelDeliveryService.Models
             var transitEvent = new TransitEvent
             {
                 TimeStamp = DateTime.Now,
-                Location = $"Locker #{ RecipientLockerId }",
+                Location = $"Locker #{RecipientLockerId}",
                 Type = TransitEventType.DeadlineOver
             };
+
+            State = new DeadlineOverState();
 
             TransitHistory.Add(transitEvent);
         }
@@ -206,6 +232,22 @@ namespace ParcelDeliveryService.Models
                 Type = TransitEventType.InExternalStorage
             };
 
+            State = new InExternalStorageState();
+
+            TransitHistory.Add(transitEvent);
+        }
+
+        public void AddLostEvent()
+        {
+            var transitEvent = new TransitEvent
+            {
+                TimeStamp = DateTime.Now,
+                Location = "Unknown",
+                Type = TransitEventType.Lost
+            };
+
+            State = new LostState();
+
             TransitHistory.Add(transitEvent);
         }
 
@@ -218,6 +260,8 @@ namespace ParcelDeliveryService.Models
                 Type = TransitEventType.Destroyed
             };
 
+            State = new DestroyedState();
+
             TransitHistory.Add(transitEvent);
         }
 
@@ -229,6 +273,8 @@ namespace ParcelDeliveryService.Models
                 Location = "At Recipient",
                 Type = TransitEventType.PickedUp
             };
+
+            State = new PickedUpState();
 
             TransitHistory.Add(transitEvent);
         }

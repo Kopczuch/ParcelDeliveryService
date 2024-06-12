@@ -1,6 +1,6 @@
 ﻿using ParcelDeliveryService.Core;
 using ParcelDeliveryService.Interfaces;
-using ParcelDeliveryService.Models;
+using ParcelDeliveryService.Models.Parcels;
 
 namespace ParcelDeliveryService.UI
 {
@@ -43,9 +43,7 @@ namespace ParcelDeliveryService.UI
 
         private void ManageParcelTransit(int parcelId)
         {
-            var choice = -1;
-
-            while (choice != 0)
+            while (true)
             {
                 Console.Clear();
                 var parcel = _parcelService.GetParcel(parcelId);
@@ -58,44 +56,27 @@ namespace ParcelDeliveryService.UI
                 parcel.DisplayTransitHistory();
                 Console.WriteLine();
 
-                var currentState = parcel.CurrentState;
-
-                if (currentState == TransitEventType.Registered)
+                if (parcel.IsTransitFinished())
                 {
-                    Console.WriteLine("Parcel has not been deposited yet.");
-                    Console.WriteLine();
-                    Console.WriteLine("Press any key to continue...");
+                    Console.WriteLine("Parcel transit is finished. Press any key to continue...");
                     Console.ReadLine();
-                    return;
-                }
-
-                if (currentState == TransitEventType.PickedUp)
-                {
-                    Console.WriteLine("Parcel has been delivered.");
-                    Console.WriteLine();
-                    Console.WriteLine("Press any key to continue...");
-                    Console.ReadLine();
-                    return;
+                    break;
                 }
 
                 Console.WriteLine("Operations:");
                 Console.WriteLine("[1] Forward In Transit");
-
-                if (currentState == TransitEventType.ReceivedFromSenderLocker ||
-                    currentState == TransitEventType.InStorage ||
-                    currentState == TransitEventType.InTransit)
-                    Console.WriteLine("[2] Lose");
-
+                Console.WriteLine("[2] Lose parcel");
+                Console.WriteLine("[3] Destroy parcel");
                 Console.WriteLine("[0] Go Back");
 
                 Console.WriteLine();
                 Console.Write("Execute operation: ");
-                choice = int.Parse(Console.ReadLine());
+                var choice = int.Parse(Console.ReadLine());
 
                 switch (choice)
                 {
                     case 1:
-                        ForwardInTransit(parcel);
+                        parcel.ForwardInTransit(_lockerService);
                         break;
 
                     case 2:
@@ -105,18 +86,6 @@ namespace ParcelDeliveryService.UI
                         return;
                 }
             }
-        }
-
-        private void ForwardInTransit(Parcel parcel)
-        {
-            if (parcel.CurrentState == TransitEventType.Deposited)
-                _lockerService.ReceiveFromLocker(parcel.Id, parcel.SenderLockerId!.Value);
-
-            _parcelService.ForwardInTransit(parcel);
-
-            if (parcel.CurrentState == TransitEventType.ReadyForPickUp)
-                _lockerService.DepositParcel(parcel, parcel.RecipientLockerId);
-
         }
     }
 }
