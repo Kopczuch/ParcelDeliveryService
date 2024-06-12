@@ -67,14 +67,49 @@ namespace ParcelDeliveryService.Models
         // Additional services
         public void Display()
         {
-            Console.WriteLine($"Id: {Id}");
-            Console.WriteLine($"Sender: {SenderId}");
-            Console.WriteLine($"Sender LockerMenu Id: {SenderLockerId}");
-            Console.WriteLine($"Recipient: {RecipientId}");
-            Console.WriteLine($"Recipient LockerMenu Id: {RecipientLockerId}");
-            Console.WriteLine($"Size: {Size}");
-            Console.WriteLine($"Estimated Delivery Time: {EstimatedDeliveryTime:d}");
-            Console.WriteLine($"Guaranteed Delivery Time: {GuaranteedDeliveryTime:d}");
+            Console.WriteLine("Parcel Information");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write($"Id: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{Id}");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Sender: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{SenderId}");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Sender LockerMenu Id: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{SenderLockerId}");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Recipient: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{RecipientId}");
+
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Recipient LockerMenu Id: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{RecipientLockerId}");
+            
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Size: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{Size}");
+            
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Estimated Delivery Time: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{EstimatedDeliveryTime:d}");
+            
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Guaranteed Delivery Time: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{GuaranteedDeliveryTime:d}");
+            Console.ResetColor();
+            Console.WriteLine("-------------------------------------------------");
         }
 
         public void DisplayTransitHistory()
