@@ -240,7 +240,7 @@ namespace ParcelDeliveryService.UI
 
             
 
-            Address address = new Address
+            /*Address address = new Address
             {
                 Country = country,
                 City = city,
@@ -251,13 +251,14 @@ namespace ParcelDeliveryService.UI
 
             User newUser = new User
             {
+                Id = 0,
                 Name = name,
                 Surname = surname,
                 PhoneNumber = phoneNumber,
                 Email = email,
                 Password = password,
                 Address = address
-            };
+            };*/
 
             // Assuming _userService is a service that handles user related operations
             //_userService.AddUser(newUser);

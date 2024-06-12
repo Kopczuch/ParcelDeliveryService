@@ -43,7 +43,7 @@ namespace ParcelDeliveryService.Repositories
             int index = _parcels.FindIndex(p => p.Id == parcel.Id);
             if (index != -1)
             {
-                _parcels[index] = parcel;
+                _parcels.Insert(index, parcel);
             }
         }
 
