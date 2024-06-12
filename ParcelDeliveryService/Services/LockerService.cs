@@ -49,12 +49,13 @@ namespace ParcelDeliveryService.Services
 
         public void ReleaseSlot(Parcel parcel, int lockerId)
         {
-            var locker = _lockers.FirstOrDefault(l => l.Id == lockerId);
+            var locker = _lockerRepository.GetById(lockerId);
 
             if (locker == null)
                 throw new NullReferenceException();
 
             locker.ReleaseSlot(parcel);
+            _lockerRepository.Update(locker);
         }
 
         public bool ReceiveFromLocker(int parcelId, int lockerId)
