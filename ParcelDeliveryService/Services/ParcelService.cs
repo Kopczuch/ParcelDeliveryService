@@ -1,5 +1,4 @@
-﻿using ParcelDeliveryService.Core;
-using ParcelDeliveryService.Interfaces;
+﻿using ParcelDeliveryService.Interfaces;
 using ParcelDeliveryService.Models;
 using System.Diagnostics;
 
@@ -42,44 +41,6 @@ namespace ParcelDeliveryService.Services
         public Parcel? GetParcel(int parcelId)
         {
             return _parcelRepository.GetById(parcelId);
-        }
-
-        
-
-        public void ForwardInTransit(Parcel parcel)
-        {
-            switch (parcel.CurrentState)
-            {
-                case TransitEventType.Deposited:
-                    parcel.AddReceivedFromSenderLockerEvent();
-                    break;
-
-                case TransitEventType.ReceivedFromSenderLocker:
-                    parcel.AddInStorageEvent();
-                    break;
-
-                case TransitEventType.InStorage:
-                    parcel.AddInTransitEvent();
-                    break;
-
-                case TransitEventType.InTransit:
-                    parcel.AddReadyForPickUpEvent();
-                    break;
-
-                case TransitEventType.ReadyForPickUp:
-                    parcel.AddDeadlineOverEvent();
-                    break;
-
-                case TransitEventType.DeadlineOver:
-                    parcel.AddInExternalStorageEvent();
-                    break;
-
-                case TransitEventType.InExternalStorage:
-                    parcel.AddDestroyedEvent();
-                    break;
-            }
-
-            _parcelRepository.Update(parcel);
         }
 
         public void PickUp(int parcelId)

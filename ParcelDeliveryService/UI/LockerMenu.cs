@@ -72,13 +72,14 @@ namespace ParcelDeliveryService.UI
             if (parcel == null)
                 throw new NullReferenceException();
 
-            if (parcel.CurrentState != TransitEventType.Registered)
-            {
-                Console.WriteLine($"Parcel #{ parcel.Id } was already deposited. Press any key to continue...");
-                Console.ReadLine();
+            // TODO: State pattern
+            //if (parcel.CurrentState != TransitEventType.Registered)
+            //{
+            //    Console.WriteLine($"Parcel #{ parcel.Id } was already deposited. Press any key to continue...");
+            //    Console.ReadLine();
                 
-                return;
-            }
+            //    return;
+            //}
 
             var availableLockers = _lockerService.GetVacantLockers();
 
