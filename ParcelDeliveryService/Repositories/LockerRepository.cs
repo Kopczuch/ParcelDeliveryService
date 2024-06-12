@@ -101,7 +101,7 @@ namespace ParcelDeliveryService.Repositories
             int index = _lockers.FindIndex(l =>  l.Id == locker.Id);
             if (index != -1)
             {
-                _lockers[index] = locker;
+                _lockers.Insert(index, locker);
             }
         }
 
