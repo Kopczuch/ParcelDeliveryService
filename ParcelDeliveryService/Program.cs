@@ -2,6 +2,7 @@
 using ParcelDeliveryService.Repositories;
 using ParcelDeliveryService.Services;
 using ParcelDeliveryService.UI;
+using ParcelDeliveryService.Core;
 
 namespace ParcelDeliveryService
 {
@@ -26,10 +27,15 @@ namespace ParcelDeliveryService
             var lockerRepository = new LockerRepository();
 
             var parcelService = new ParcelService(parcelRepository);
+
             var lockerService = new LockerService(lockerRepository);
+            var rerouteService = new RerouteServiceDecorator(parcelService);
+
             
-            var userPortalMenu = new UserPortalMenu(parcelService, lockerService);
+
+            var userPortalMenu = new UserPortalMenu(parcelService, lockerService,lockerRepository, rerouteService);
             var lockerMenu = new LockerMenu(lockerService, parcelService, parcelRepository);
+
             var transitMenu = new TransitMenu(parcelService, lockerService);
 
             var program = new Program(

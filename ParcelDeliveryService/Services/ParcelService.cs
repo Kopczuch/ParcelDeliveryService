@@ -92,5 +92,10 @@ namespace ParcelDeliveryService.Services
             parcel.AddPickUpEvent();
             _parcelRepository.Update(parcel);
         }
+
+        public void UpdateParcel(Parcel parcel)
+        {
+            _parcelRepository.Update(parcel);
+        }
     }
 }
