@@ -9,11 +9,11 @@ namespace ParcelDeliveryService.UI
         private readonly IMenu _transitMenu;
 
         public MainMenu(
-            IMenu userPortalMenuMenu,
+            IMenu userPortalMenu,
             IMenu lockerMenu,
             IMenu transitMenu)
         {
-            _userPortalMenu = userPortalMenuMenu;
+            _userPortalMenu = userPortalMenu;
             _lockerMenu = lockerMenu;
             _transitMenu = transitMenu;
         }
@@ -22,44 +22,80 @@ namespace ParcelDeliveryService.UI
         {
             while (true)
             {
-                var requestedOperation = Menu();
-
-                if (int.TryParse(requestedOperation, out int operation))
+                try
                 {
-                    switch (operation)
+                    var requestedOperation = DisplayMenu();
+
+                    if (int.TryParse(requestedOperation, out int operation))
                     {
-                        case 1:
-                            _userPortalMenu.Run();
-                            break;
+                        switch (operation)
+                        {
+                            case 1:
+                                _userPortalMenu.Run();
+                                break;
 
-                        case 2:
-                            _lockerMenu.Run();
-                            break;
+                            case 2:
+                                _lockerMenu.Run();
+                                break;
 
-                        case 3:
-                            _transitMenu.Run();
-                            break;
+                            case 3:
+                                _transitMenu.Run();
+                                break;
 
-                        case 0:
-                            return;
+                            case 0:
+                                return;
+
+                            default:
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Invalid option. Please try again.");
+                                Console.ResetColor();
+                                break;
+                        }
                     }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid input. Please enter a number.");
+                        Console.ResetColor();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    Console.ResetColor();
+                }
+                finally
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("Press any key to continue...");
+                    Console.ResetColor();
+                    Console.ReadKey();
                 }
             }
         }
 
-        private string? Menu()
+        private string? DisplayMenu()
         {
             Console.Clear();
-
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("[1] User Portal");
+            Console.ResetColor();
+
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[2] Lockers");
+            Console.ResetColor();
+
+            Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("[3] Manage Parcel Transit");
+            Console.ResetColor();
+
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("[0] Exit");
+            Console.ResetColor();
 
             Console.Write("\nChoose operation: ");
-            var operation = Console.ReadLine();
-
-            return operation;
+            return Console.ReadLine();
         }
     }
 }

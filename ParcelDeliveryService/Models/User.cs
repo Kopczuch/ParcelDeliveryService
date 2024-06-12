@@ -26,12 +26,38 @@ namespace ParcelDeliveryService.Models
 
         public void Display()
         {
-            Console.WriteLine($"Id: {Id}");
-            Console.WriteLine($"Name: {Name}");
-            Console.WriteLine($"Surname: {Surname}");
-            Console.WriteLine($"PhoneNumber: {PhoneNumber}");
-            Console.WriteLine($"Email: {Email}");
-            Console.WriteLine($"Address: {Address.Country}, {Address.City}, {Address.PostalCode}, {Address.Street} {Address.StreetNumber}");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Id: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{Id}");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Name: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{Name}");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Surname: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{Surname}");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("PhoneNumber: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{PhoneNumber}");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Email: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{Email}");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Address: ");
+
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{Address.Country}, {Address.City}, {Address.PostalCode}, {Address.Street} {Address.StreetNumber}");
+            Console.ResetColor();
+            Console.WriteLine("-------------------------------------------------");
         }
     }
 
