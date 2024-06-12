@@ -16,9 +16,9 @@ namespace ParcelDeliveryService.Repositories
         public ParcelRepository()
         {
             _parcels = new List<Parcel> {
-                new Parcel(0, "James", "Edward", Size.Small, 1),
-                new Parcel(1, "Samantha", "Andrew", Size.Large, 3),
-                new Parcel(2, "Andrew", "James", Size.Medium, 2)
+                new Parcel(0, 2, 1, Size.Small, 1),
+                new Parcel(1, 2, 3, Size.Large, 3),
+                new Parcel(2, 4, 2, Size.Medium, 2)
             };
         }
 

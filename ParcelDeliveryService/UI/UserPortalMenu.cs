@@ -9,21 +9,21 @@ namespace ParcelDeliveryService.UI
         private readonly IParcelService _parcelService;
         private readonly ILockerService _lockerService;
         private readonly ILockerRepository _lockerRepository;
-
+        private readonly IUserService _userService;
         private readonly IRerouteService _rerouteService;
-
-        //private readonly IUserService _userService;
 
         public UserPortalMenu(
             IParcelService parcelService,
             ILockerService lockerService,
             ILockerRepository lockerRepository,
-            IRerouteService rerouteService)
+            IRerouteService rerouteService,
+            IUserService userService)
         {
             _parcelService = parcelService;
             _lockerService = lockerService;
             _lockerRepository = lockerRepository;
-            _rerouteService = rerouteService;  // Initialize reroute service
+            _rerouteService = rerouteService;  
+            _userService = userService;
         }
 
         public void Run()
@@ -39,20 +39,22 @@ namespace ParcelDeliveryService.UI
                         case 1:
                             RegisterParcel();
                             break;
-
                         case 2:
                             TrackParcel();
                             break;
                         case 3:
-                            CreateUser();
+                            RegisterUser();
                             break;
                         case 4:
-                            ShowUsers();
+                            LoginUser();
                             break;
                         case 5:
-                            RerouteParcel(); // New case for rerouting a parcel
+                            ShowUsers();
                             break;
                         case 6:
+                            RerouteParcel();
+                            break;
+                        case 7:
                             ExpandLocker();
                             break;
 
@@ -69,10 +71,11 @@ namespace ParcelDeliveryService.UI
             Console.Clear();
             Console.WriteLine("[1] Register Parcel");
             Console.WriteLine("[2] Track Parcel");
-            Console.WriteLine("[3] Add User");
-            Console.WriteLine("[4] Show Users");
-            Console.WriteLine("[5] Reroute Parcel"); // New menu option for rerouting a parcel
-            Console.WriteLine("[6] Expand Lcoekr"); 
+            Console.WriteLine("[3] Register User");
+            Console.WriteLine("[4] Login User");
+            Console.WriteLine("[5] Show Users");
+            Console.WriteLine("[6] Reroute Parcel"); // New menu option for rerouting a parcel
+            Console.WriteLine("[7] Expand Locker"); 
             Console.WriteLine("[0] Go Back");
 
             Console.WriteLine();
@@ -135,13 +138,43 @@ namespace ParcelDeliveryService.UI
             Console.Clear();
             var parcel = new Parcel();
 
-            Console.Write("Sender: ");
-            parcel.Sender = Console.ReadLine();
+            User sender = _userService.GetCurrentUser();
+            if( sender == null )
+            {
+                Console.WriteLine("You must sign in before registering a parcel."); 
+                Console.WriteLine();
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
+                return;
+            }
+
+            parcel.SenderId = sender.Id;
 
             Console.WriteLine();
+            ShowUsers();
 
-            Console.Write("Recipient: ");
-            parcel.Recipient = Console.ReadLine();
+            User receipient;
+            while (true)
+            {
+                Console.Write("Recipient UserId: ");
+                int receipientId = int.Parse(Console.ReadLine());
+                receipient = _userService.GetUser(receipientId);
+                if( receipient != null)
+                {
+                    parcel.RecipientId = receipientId;
+                    break;
+                }
+                Console.Write("Invalid Id, please try again!");
+                Console.WriteLine();
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
+            }
+
+            Console.Clear();
+            Console.Write("Sender: ");
+            Console.WriteLine($"{sender.Name} {sender.Surname}");
+            Console.Write("Receipient: ");
+            Console.WriteLine($"{receipient.Name} {receipient.Surname}");
 
             Console.WriteLine();
             Console.WriteLine("Size:");
@@ -257,7 +290,7 @@ namespace ParcelDeliveryService.UI
             Console.ReadLine();
         }
 
-        public void CreateUser()
+        public void RegisterUser()
         {
             Console.Clear();
             Console.WriteLine("Enter the following details to create a new user:");
@@ -293,47 +326,94 @@ namespace ParcelDeliveryService.UI
             Console.Write("Apartment number: ");
             string apartment = Console.ReadLine();
 
-            
 
-            /*Address address = new Address
+            Address address = new Address(country, city, zipCode, street, apartment);
+            bool isEmailValid = false;
+            bool firstTry = true;
+
+            while (!isEmailValid)
             {
-                Country = country,
-                City = city,
-                Street = street,
-                PostalCode = zipCode,
-                StreetNumber = apartment
-            };
+                if (!firstTry)
+                {
+                    Console.Write("Email: ");
+                    email = Console.ReadLine();
+                }
+                else
+                {
+                    firstTry = false;
+                }
 
-            User newUser = new User
-            {
-                Id = 0,
-                Name = name,
-                Surname = surname,
-                PhoneNumber = phoneNumber,
-                Email = email,
-                Password = password,
-                Address = address
-            };*/
+                User newUser = new User(0, name, surname, phoneNumber, email, password, address);
+                isEmailValid = _userService.RegisterUser(newUser);
 
-            // Assuming _userService is a service that handles user related operations
-            //_userService.AddUser(newUser);
+                if (isEmailValid)
+                {
+                    Console.WriteLine("User created successfully. Press any key to continue...");
+                }
+                else
+                {
+                    Console.WriteLine($"The {email} email address is already used.");
+                    Console.WriteLine("Do you want to enter a different email address and continue the registration process? [y/n]");
 
-            Console.WriteLine("User created successfully. Press any key to continue...");
+                    string response = Console.ReadLine().ToLower();
+                    if (response != "y" && response != "yes")
+                    {
+                        Console.WriteLine("Registration process stopped. Press any key to continue...");
+                        Console.ReadKey();
+                        return;
+                    }
+                }
+            }
+
             Console.ReadLine();
+        }
+
+        private void LoginUser()
+        {
+            Console.Clear();
+            Console.WriteLine("Enter your credentials to sign in:");
+
+            bool authorized = false;
+
+            while(!authorized)
+            {
+                Console.Write("Email: ");
+                string email = Console.ReadLine();
+
+                Console.Write("Password: ");
+                string password = Console.ReadLine();
+
+                authorized = _userService.LoginUser(email, password);
+
+                if (authorized)
+                {
+                    Console.WriteLine("Success! You are now logged in. Press any key to continue...");
+                    Console.ReadKey();
+                    return;
+                }
+
+                Console.WriteLine("Credentials are incorrect.");
+                Console.WriteLine("Do you want to try again? [y/n]");
+
+                string response = Console.ReadLine().ToLower();
+                if (response != "y" && response != "yes")
+                {
+                    return;
+                }
+            }
         }
 
         private void ShowUsers()
         {
             Console.Clear();
 
-            
-            
-            Console.WriteLine();
-            
-          
-
-            Console.WriteLine();
-           
+            var users = _userService.ListUsers();
+            Console.WriteLine("Registered users:");
+            foreach (var user in users)
+            {
+                Console.WriteLine();
+                user.Display();
+            }
 
             Console.WriteLine();
             Console.WriteLine("Press any key to continue...");
@@ -342,6 +422,7 @@ namespace ParcelDeliveryService.UI
 
         private void RerouteParcel()
         {
+        
             Console.Clear();
 
             Console.Write("Provide parcel ID: ");
