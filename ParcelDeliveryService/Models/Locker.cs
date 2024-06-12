@@ -11,6 +11,7 @@ namespace ParcelDeliveryService.Models
         }
 
         public int Id { get; set; }
+        public Address Address { get; set; }
         public IList<Slot> Slots { get; set; }
         public IList<LockerHistoryItem> LockerHistory { get; set; }
 
@@ -122,6 +123,7 @@ namespace ParcelDeliveryService.Models
         {
             Console.WriteLine($"Locker #{ Id }");
             Console.WriteLine($"Occupancy: {GetOccupancy()}");
+            Console.WriteLine($"Address: {Address.Country}, {Address.City}, {Address.PostalCode}, {Address.Street} {Address.StreetNumber}");
         }
 
         internal void ReleaseSlot(Parcel parcel)
@@ -133,7 +135,12 @@ namespace ParcelDeliveryService.Models
                 slot.ParcelId = null;
                 return;
             }
-
         }
+
+        public bool IsVacant()
+        {
+            return Slots.All(s => s.Vacancy == VacancyState.Vacant);
+        }
+
     }
 }

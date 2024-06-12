@@ -1,6 +1,7 @@
 ﻿using ParcelDeliveryService.Core;
 using ParcelDeliveryService.Interfaces;
 using ParcelDeliveryService.Models;
+using System.Runtime.CompilerServices;
 
 namespace ParcelDeliveryService.Services
 {
@@ -71,6 +72,23 @@ namespace ParcelDeliveryService.Services
                 _lockerRepository.Update(locker);
             }
             return output;
+        }
+
+        public bool ChangeAddress(int lockerId, Address address)
+        {
+            var locker = _lockerRepository.GetById(lockerId);
+
+            if (locker == null)
+                throw new NullReferenceException();
+
+            if(locker.IsVacant())
+            {
+                locker.Address = address;
+                _lockerRepository.Update(locker);
+                return true;
+            }
+
+            return false;
         }
     }
 }

@@ -37,7 +37,11 @@ namespace ParcelDeliveryService.UI
                         case 2:
                             ReceiveParcel();
                             break;
-                        
+
+                        case 3:
+                            ChangeAddress();
+                            break;
+
 
                         case 0:
                             return;
@@ -51,7 +55,8 @@ namespace ParcelDeliveryService.UI
             Console.Clear();
             Console.WriteLine("[1] Deposit Parcel");
             Console.WriteLine("[2] Receive Parcel");
-            
+            Console.WriteLine("[3] Change locker address");
+
             Console.WriteLine("[0] Go Back");
 
             Console.WriteLine();
@@ -136,6 +141,48 @@ namespace ParcelDeliveryService.UI
             Console.ReadLine();
         }
 
-        
+        private void ChangeAddress()
+        {
+            Console.Clear();
+            Console.WriteLine("Choose your locker.");
+            var lockers = _lockerService.GetLockers();
+
+            foreach (var locker in lockers)
+            {
+                Console.WriteLine();
+                locker.Display();
+            }
+
+            Console.Write("Locker Id: ");
+            var lockerId = int.Parse(Console.ReadLine());
+
+            Console.Clear();
+            Console.WriteLine($"Locker #{lockerId}\n");
+
+            Console.WriteLine("Enter New Address Details:");
+            Console.Write("Country: ");
+            string country = Console.ReadLine();
+
+            Console.Write("City: ");
+            string city = Console.ReadLine();
+
+            Console.Write("Zip Code: ");
+            string zipCode = Console.ReadLine();
+
+            Console.Write("Street: ");
+            string street = Console.ReadLine();
+
+            Console.Write("Apartment number: ");
+            string apartment = Console.ReadLine();
+
+            Address address = new Address(country, city, zipCode, street, apartment);
+
+            bool result = _lockerService.ChangeAddress(lockerId, address);
+            Console.WriteLine(result ? "Locker's address changed successfully." : "Locker is currently in use, so it cannot be moved.");
+
+            Console.WriteLine();
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+        }
     }
 }

@@ -16,15 +16,15 @@ namespace ParcelDeliveryService.Repositories
         public ParcelRepository()
         {
             _parcels = new List<Parcel> {
-                new Parcel(0, 2, 1, Size.Small, 1),
-                new Parcel(1, 2, 3, Size.Large, 3),
-                new Parcel(2, 4, 2, Size.Medium, 2)
+                new Parcel(1, 2, 1, Size.Small, 1),
+                new Parcel(2, 2, 3, Size.Large, 3),
+                new Parcel(3, 4, 2, Size.Medium, 2)
             };
         }
 
         public void Add(Parcel parcel)
         {
-            parcel.Id = _parcels.Count;
+            parcel.Id = _parcels.Count + 1;
             _parcels.Add(parcel);
         }
 
@@ -43,7 +43,7 @@ namespace ParcelDeliveryService.Repositories
             int index = _parcels.FindIndex(p => p.Id == parcel.Id);
             if (index != -1)
             {
-                _parcels.Insert(index, parcel);
+                _parcels[index] = parcel;
             }
         }
 

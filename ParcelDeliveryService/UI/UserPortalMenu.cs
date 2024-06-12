@@ -417,7 +417,7 @@ namespace ParcelDeliveryService.UI
 
             Console.WriteLine();
             Console.WriteLine("Press any key to continue...");
-            Console.ReadLine();
+            Console.ReadKey();
         }
 
         private void RerouteParcel()
