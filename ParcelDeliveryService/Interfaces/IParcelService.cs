@@ -10,6 +10,5 @@ namespace ParcelDeliveryService.Interfaces
         Parcel? GetParcel(int parcelId);
         void ForwardInTransit(Parcel parcel);
         void PickUp(int parcelId);
-
     }
 }

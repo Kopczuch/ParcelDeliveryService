@@ -1,52 +1,50 @@
 ﻿using ParcelDeliveryService.Core;
 using ParcelDeliveryService.Interfaces;
 using ParcelDeliveryService.Models;
+using System.Diagnostics;
 
 namespace ParcelDeliveryService.Services
 {
     public class ParcelService : IParcelService
     {
-        private readonly IList<Parcel> _parcels;
+        private IParcelRepository _parcelRepository;
 
-        public ParcelService()
+        public ParcelService(IParcelRepository parcelRepository)
         {
-            _parcels = new List<Parcel>
-            {
-                //new Parcel("James", "Edward", Size.Small, DateTime.Now.AddDays(4), DateTime.Now.AddDays(7), 1),
-                //new Parcel("Samantha", "Andrew", Size.Large, DateTime.Now.AddDays(10), DateTime.Now.AddDays(14), 2),
-                //new Parcel("Andrew", "James", Size.ExtraSmall, DateTime.Now.AddDays(1), DateTime.Now.AddDays(3), 3),
-            };
+            _parcelRepository = parcelRepository;
         }
+
 
         public Parcel RegisterParcel(Parcel parcel)
         {
-            parcel.Id = _parcels.Count + 1;
-            parcel.AddRegistryEvent();
-            _parcels.Add(parcel);
+            _parcelRepository.Add(parcel);
 
             return parcel;
         }
 
         public void DepositParcel(int parcelId, int senderLockerId)
         {
-            var parcel = _parcels.FirstOrDefault(p => p.Id == parcelId);
+            var parcel = _parcelRepository.GetById(parcelId);
 
             if (parcel == null)
                 throw new NullReferenceException();
 
             parcel.SenderLockerId = senderLockerId;
             parcel.AddDepositEvent();
+            _parcelRepository.Update(parcel);
         }
 
         public IList<Parcel> ListParcels()
         {
-            return _parcels;
+            return (IList<Parcel>)_parcelRepository.GetAll();
         }
 
         public Parcel? GetParcel(int parcelId)
         {
-            return _parcels.FirstOrDefault(p => p.Id == parcelId);
+            return _parcelRepository.GetById(parcelId);
         }
+
+        
 
         public void ForwardInTransit(Parcel parcel)
         {
@@ -80,16 +78,19 @@ namespace ParcelDeliveryService.Services
                     parcel.AddDestroyedEvent();
                     break;
             }
+
+            _parcelRepository.Update(parcel);
         }
 
         public void PickUp(int parcelId)
         {
-            var parcel = GetParcel(parcelId);
+            var parcel = _parcelRepository.GetById(parcelId);
 
             if (parcel == null)
                 throw new NullReferenceException();
 
             parcel.AddPickUpEvent();
+            _parcelRepository.Update(parcel);
         }
     }
 }
