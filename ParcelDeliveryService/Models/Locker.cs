@@ -123,5 +123,17 @@ namespace ParcelDeliveryService.Models
             Console.WriteLine($"Locker #{ Id }");
             Console.WriteLine($"Occupancy: {GetOccupancy()}");
         }
+
+        internal void ReleaseSlot(Parcel parcel)
+        {
+            var slot = Slots.FirstOrDefault(s => s.ParcelId == parcel.Id);
+            if (slot != null)
+            {
+                slot.Vacancy = VacancyState.Vacant;
+                slot.ParcelId = null;
+                return;
+            }
+
+        }
     }
 }
