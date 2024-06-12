@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace ParcelDeliveryService.Interfaces
 {
-    public interface IParcelRepository
+    public interface ILockerRepository
     {
-        void Add(Parcel parcel);
-        Parcel? GetById(int id);
-        IEnumerable<Parcel> GetAll();
-        void Update(Parcel parcel);
+        void Add(Locker locker);
+        Locker? GetById(int id);
+        IEnumerable<Locker> GetAll();
+        void Update(Locker locker);
         void Remove(int id);
     }
 }

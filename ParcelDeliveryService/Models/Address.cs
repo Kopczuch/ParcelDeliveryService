@@ -8,5 +8,13 @@
         public string Street { get; set; }
         public string StreetNumber { get; set; }
 
+        public Address(string country, string city, string postalCode, string street, string streetNumber)
+        {
+            Country = country;
+            City = city;
+            PostalCode = postalCode;
+            Street = street;
+            StreetNumber = streetNumber;
+        }
     }
 }

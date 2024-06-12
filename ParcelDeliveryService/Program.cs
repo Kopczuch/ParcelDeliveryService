@@ -23,9 +23,10 @@ namespace ParcelDeliveryService
         {
             // Dependencies
             var parcelRepository = new ParcelRepository();
+            var lockerRepository = new LockerRepository();
 
             var parcelService = new ParcelService(parcelRepository);
-            var lockerService = new LockerService();
+            var lockerService = new LockerService(lockerRepository);
             
             var userPortalMenu = new UserPortalMenu(parcelService, lockerService);
             var lockerMenu = new LockerMenu(lockerService, parcelService, parcelRepository);
