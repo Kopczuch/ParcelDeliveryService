@@ -12,8 +12,6 @@ namespace ParcelDeliveryService.UI
         private readonly IUserService _userService;
         private readonly IRerouteService _rerouteService;
 
-        //private readonly IUserService _userService;
-
         public UserPortalMenu(
             IParcelService parcelService,
             ILockerService lockerService,
@@ -24,7 +22,7 @@ namespace ParcelDeliveryService.UI
             _parcelService = parcelService;
             _lockerService = lockerService;
             _lockerRepository = lockerRepository;
-            _rerouteService = rerouteService;  // Initialize reroute service
+            _rerouteService = rerouteService;  
             _userService = userService;
         }
 
@@ -54,7 +52,7 @@ namespace ParcelDeliveryService.UI
                             ShowUsers();
                             break;
                         case 6:
-                            RerouteParcel(); // New case for rerouting a parcel
+                            RerouteParcel();
                             break;
                         case 7:
                             ExpandLocker();
@@ -140,13 +138,43 @@ namespace ParcelDeliveryService.UI
             Console.Clear();
             var parcel = new Parcel();
 
-            Console.Write("Sender: ");
-            parcel.Sender = Console.ReadLine();
+            User sender = _userService.GetCurrentUser();
+            if( sender == null )
+            {
+                Console.WriteLine("You must sign in before registering a parcel."); 
+                Console.WriteLine();
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
+                return;
+            }
+
+            parcel.SenderId = sender.Id;
 
             Console.WriteLine();
+            ShowUsers();
 
-            Console.Write("Recipient: ");
-            parcel.Recipient = Console.ReadLine();
+            User receipient;
+            while (true)
+            {
+                Console.Write("Recipient UserId: ");
+                int receipientId = int.Parse(Console.ReadLine());
+                receipient = _userService.GetUser(receipientId);
+                if( receipient != null)
+                {
+                    parcel.RecipientId = receipientId;
+                    break;
+                }
+                Console.Write("Invalid Id, please try again!");
+                Console.WriteLine();
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
+            }
+
+            Console.Clear();
+            Console.Write("Sender: ");
+            Console.WriteLine($"{sender.Name} {sender.Surname}");
+            Console.Write("Receipient: ");
+            Console.WriteLine($"{receipient.Name} {receipient.Surname}");
 
             Console.WriteLine();
             Console.WriteLine("Size:");

@@ -12,21 +12,21 @@ namespace ParcelDeliveryService.Models
             State = new RegisteredState();
         }
 
-        public Parcel(string sender, string recipient, Size size, int recipientLockerId)
+        public Parcel(int senderId, int recipientId, Size size, int recipientLockerId)
         {
-            Sender = sender;
-            Recipient = recipient;
+            SenderId = senderId;
+            RecipientId = recipientId;
             Size = size;
             RecipientLockerId = recipientLockerId;
             TransitHistory = new List<TransitEvent>();
             State = new RegisteredState();
         }
 
-        public Parcel(int id, string sender, string recipient, Size size, int recipientLockerId)
+        public Parcel(int id, int senderId, int recipientId, Size size, int recipientLockerId)
         {
             Id = id;
-            Sender = sender;
-            Recipient = recipient;
+            SenderId = senderId;
+            RecipientId = recipientId;
             Size = size;
             RecipientLockerId = recipientLockerId;
             TransitHistory = new List<TransitEvent>();
@@ -36,8 +36,8 @@ namespace ParcelDeliveryService.Models
 
         public int Id { get; set; }
         private ParcelState State { get; set; }
-        public string Sender { get; set; }
-        public string Recipient { get; set; }
+        public int SenderId { get; set; }
+        public int RecipientId { get; set; }
         public DateTime EstimatedDeliveryTime { get; set; }
         public DateTime GuaranteedDeliveryTime { get; set; }
         public IList<TransitEvent> TransitHistory { get; set; }
@@ -68,9 +68,9 @@ namespace ParcelDeliveryService.Models
         public void Display()
         {
             Console.WriteLine($"Id: {Id}");
-            Console.WriteLine($"Sender: {Sender}");
+            Console.WriteLine($"Sender: {SenderId}");
             Console.WriteLine($"Sender LockerMenu Id: {SenderLockerId}");
-            Console.WriteLine($"Recipient: {Recipient}");
+            Console.WriteLine($"Recipient: {RecipientId}");
             Console.WriteLine($"Recipient LockerMenu Id: {RecipientLockerId}");
             Console.WriteLine($"Size: {Size}");
             Console.WriteLine($"Estimated Delivery Time: {EstimatedDeliveryTime:d}");
