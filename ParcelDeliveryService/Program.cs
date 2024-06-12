@@ -1,6 +1,7 @@
 ﻿using ParcelDeliveryService.Interfaces;
 using ParcelDeliveryService.Services;
 using ParcelDeliveryService.UI;
+using ParcelDeliveryService.Core;
 
 namespace ParcelDeliveryService
 {
@@ -23,8 +24,9 @@ namespace ParcelDeliveryService
             // Dependencies
             var parcelService = new ParcelService();
             var lockerService = new LockerService();
+            var rerouteService = new RerouteServiceDecorator(parcelService);
             
-            var userPortalMenu = new UserPortalMenu(parcelService, lockerService);
+            var userPortalMenu = new UserPortalMenu(parcelService, lockerService, rerouteService);
             var lockerMenu = new LockerMenu(lockerService, parcelService);
             var transitMenu = new TransitMenu(parcelService, lockerService);
 

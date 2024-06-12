@@ -11,5 +11,7 @@ namespace ParcelDeliveryService.Interfaces
         void ForwardInTransit(Parcel parcel);
         void PickUp(int parcelId);
 
+        void UpdateParcel(Parcel parcel); // New method to update parcel details
+
     }
 }

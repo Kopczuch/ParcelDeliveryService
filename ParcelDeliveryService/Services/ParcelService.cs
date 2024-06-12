@@ -91,5 +91,16 @@ namespace ParcelDeliveryService.Services
 
             parcel.AddPickUpEvent();
         }
+
+        public void UpdateParcel(Parcel parcel)
+        {
+            // Update the parcel in the list (assuming in-memory storage)
+            var existingParcel = _parcels.FirstOrDefault(p => p.Id == parcel.Id);
+            if (existingParcel != null)
+            {
+                _parcels.Remove(existingParcel);
+                _parcels.Add(parcel);
+            }
+        }
     }
 }

@@ -9,14 +9,18 @@ namespace ParcelDeliveryService.UI
         private readonly IParcelService _parcelService;
         private readonly ILockerService _lockerService;
 
+        private readonly IRerouteService _rerouteService;
+
         //private readonly IUserService _userService;
 
         public UserPortalMenu(
             IParcelService parcelService,
-            ILockerService lockerService)
+            ILockerService lockerService,
+            IRerouteService rerouteService)
         {
             _parcelService = parcelService;
             _lockerService = lockerService;
+            _rerouteService = rerouteService;  // Initialize reroute service
         }
 
         public void Run()
@@ -42,7 +46,9 @@ namespace ParcelDeliveryService.UI
                         case 4:
                             ShowUsers();
                             break;
-                            
+                        case 5:
+                            RerouteParcel(); // New case for rerouting a parcel
+                            break;
 
                         case 0:
                             return;
@@ -59,6 +65,7 @@ namespace ParcelDeliveryService.UI
             Console.WriteLine("[2] Track Parcel");
             Console.WriteLine("[3] Add User");
             Console.WriteLine("[4] Show Users");
+            Console.WriteLine("[5] Reroute Parcel"); // New menu option for rerouting a parcel
             Console.WriteLine("[0] Go Back");
 
             Console.WriteLine();
@@ -271,6 +278,25 @@ namespace ParcelDeliveryService.UI
 
             Console.WriteLine();
            
+
+            Console.WriteLine();
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadLine();
+        }
+
+        private void RerouteParcel()
+        {
+            Console.Clear();
+
+            Console.Write("Provide parcel ID: ");
+            var parcelId = int.Parse(Console.ReadLine());
+
+            Console.Write("Provide new locker ID: ");
+            var newLockerId = int.Parse(Console.ReadLine());
+
+            var parcel = _parcelService.GetParcel(parcelId);
+
+            _rerouteService.Reroute(parcel, newLockerId);
 
             Console.WriteLine();
             Console.WriteLine("Press any key to continue...");
