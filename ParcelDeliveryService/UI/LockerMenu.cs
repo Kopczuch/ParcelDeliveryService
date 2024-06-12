@@ -37,6 +37,7 @@ namespace ParcelDeliveryService.UI
                         case 2:
                             ReceiveParcel();
                             break;
+                        
 
                         case 0:
                             return;
@@ -50,6 +51,7 @@ namespace ParcelDeliveryService.UI
             Console.Clear();
             Console.WriteLine("[1] Deposit Parcel");
             Console.WriteLine("[2] Receive Parcel");
+            
             Console.WriteLine("[0] Go Back");
 
             Console.WriteLine();
@@ -132,5 +134,7 @@ namespace ParcelDeliveryService.UI
             Console.WriteLine("Press any key to continue...");
             Console.ReadLine();
         }
+
+        
     }
 }

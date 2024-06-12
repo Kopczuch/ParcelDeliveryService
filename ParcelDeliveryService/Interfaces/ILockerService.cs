@@ -10,5 +10,6 @@ namespace ParcelDeliveryService.Interfaces
         void ReserveSlot(Parcel parcel, int lockerId);
         bool ReceiveFromLocker(int parcelId, int lockerId);
         void ReleaseSlot(Parcel parcel, int recipientLockerId);
+        
     }
 }

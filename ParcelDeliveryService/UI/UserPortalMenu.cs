@@ -8,6 +8,7 @@ namespace ParcelDeliveryService.UI
     {
         private readonly IParcelService _parcelService;
         private readonly ILockerService _lockerService;
+        private readonly ILockerRepository _lockerRepository;
 
         private readonly IRerouteService _rerouteService;
 
@@ -16,10 +17,12 @@ namespace ParcelDeliveryService.UI
         public UserPortalMenu(
             IParcelService parcelService,
             ILockerService lockerService,
+            ILockerRepository lockerRepository,
             IRerouteService rerouteService)
         {
             _parcelService = parcelService;
             _lockerService = lockerService;
+            _lockerRepository = lockerRepository;
             _rerouteService = rerouteService;  // Initialize reroute service
         }
 
@@ -49,6 +52,9 @@ namespace ParcelDeliveryService.UI
                         case 5:
                             RerouteParcel(); // New case for rerouting a parcel
                             break;
+                        case 6:
+                            ExpandLocker();
+                            break;
 
                         case 0:
                             return;
@@ -66,6 +72,7 @@ namespace ParcelDeliveryService.UI
             Console.WriteLine("[3] Add User");
             Console.WriteLine("[4] Show Users");
             Console.WriteLine("[5] Reroute Parcel"); // New menu option for rerouting a parcel
+            Console.WriteLine("[6] Expand Lcoekr"); 
             Console.WriteLine("[0] Go Back");
 
             Console.WriteLine();
@@ -73,6 +80,54 @@ namespace ParcelDeliveryService.UI
             var operation = Console.ReadLine();
 
             return operation;
+        }
+
+        private void ExpandLocker()
+        {
+            Console.Clear();
+            Console.WriteLine("Select a locker to expand:");
+
+            var lockers = _lockerService.GetLockers();
+
+            foreach (var locker in lockers)
+            {
+                Console.WriteLine($"[{locker.Id}] Locker #{locker.Id}");
+            }
+
+            Console.Write("Enter locker ID: ");
+            var lockerId = int.Parse(Console.ReadLine());
+
+            var selectedLocker = lockers.FirstOrDefault(l => l.Id == lockerId);
+
+            if (selectedLocker == null)
+            {
+                Console.WriteLine("Invalid locker ID.");
+                return;
+            }
+
+            Console.Write("Enter the number of slots to add: ");
+            var slotsToAdd = int.Parse(Console.ReadLine());
+
+            var compositeLocker = new LockerComposite(selectedLocker);
+
+            for (int i = 0; i < slotsToAdd; i++)
+            {
+                Console.WriteLine($"Slot {i + 1}:");
+                Console.Write("Enter slot size (Small, Medium, Large): ");
+                var size = Enum.Parse<Size>(Console.ReadLine());
+                compositeLocker.AddSlot(new Slot { Size = size, Vacancy = VacancyState.Vacant });
+            }
+
+            // Update locker with additional slots
+            foreach (var slot in compositeLocker.AdditionalSlots)
+            {
+                selectedLocker.Slots.Add(slot);
+            }
+
+            // Update locker in repository
+            _lockerRepository.Update(selectedLocker);
+
+            Console.WriteLine($"Locker #{lockerId} expanded successfully.");
         }
 
         private void RegisterParcel()
