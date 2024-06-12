@@ -7,18 +7,18 @@ namespace ParcelDeliveryService.Core.ParcelStates
     {
         public override bool IsTerminalState => true;
 
-        public override void HandleForwardInTransit(Parcel parcel, ILockerService lockerService)
+        public override void HandleForwardInTransit(Parcel parcel, IParcelService parcelService, ILockerService lockerService)
         {
             // note: there are no more actions possible in terminal state
         }
 
-        public override void Destroy(Parcel parcel)
+        public override void Destroy(Parcel parcel, IParcelService parcelService)
         {
             Console.WriteLine("Lost parcel cannot be destroyed.\n");
             Console.ReadLine();
         }
 
-        public override void Lose(Parcel parcel)
+        public override void Lose(Parcel parcel, IParcelService parcelService)
         {
             Console.WriteLine("Parcel was already lost.\n");
             Console.ReadLine();

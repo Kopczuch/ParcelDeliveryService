@@ -1,4 +1,5 @@
-﻿using ParcelDeliveryService.Interfaces;
+﻿using ParcelDeliveryService.Commands;
+using ParcelDeliveryService.Interfaces;
 using ParcelDeliveryService.Models;
 
 namespace ParcelDeliveryService.Core.ParcelStates
@@ -7,9 +8,10 @@ namespace ParcelDeliveryService.Core.ParcelStates
     {
         public override bool IsTerminalState => false;
 
-        public override void HandleForwardInTransit(Parcel parcel, ILockerService lockerService)
+        public override void HandleForwardInTransit(Parcel parcel, IParcelService parcelService, ILockerService lockerService)
         {
-            parcel.AddInStorageEvent();
+            var command = new StoreParcelCommand(parcelService);
+            command.Execute(parcel);
         }
     }
 }

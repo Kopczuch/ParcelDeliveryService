@@ -1,4 +1,5 @@
-﻿using ParcelDeliveryService.Core;
+﻿using ParcelDeliveryService.Commands;
+using ParcelDeliveryService.Core;
 using ParcelDeliveryService.Interfaces;
 using ParcelDeliveryService.Models;
 
@@ -8,16 +9,13 @@ namespace ParcelDeliveryService.UI
     {
         private readonly ILockerService _lockerService;
         private readonly IParcelService _parcelService;
-        private readonly IParcelRepository _parcelRepository;
 
         public LockerMenu(
             ILockerService lockerService,
-            IParcelService parcelService,
-            IParcelRepository parcelRepository)
+            IParcelService parcelService)
         {
             _lockerService = lockerService;
             _parcelService = parcelService;
-            _parcelRepository = parcelRepository;   
         }
 
         public void Run()
@@ -37,7 +35,7 @@ namespace ParcelDeliveryService.UI
                         case 2:
                             ReceiveParcel();
                             break;
-                        
+
 
                         case 0:
                             return;
@@ -51,7 +49,7 @@ namespace ParcelDeliveryService.UI
             Console.Clear();
             Console.WriteLine("[1] Deposit Parcel");
             Console.WriteLine("[2] Receive Parcel");
-            
+
             Console.WriteLine("[0] Go Back");
 
             Console.WriteLine();
@@ -68,18 +66,17 @@ namespace ParcelDeliveryService.UI
             var parcelId = int.Parse(Console.ReadLine());
 
             var parcel = _parcelService.GetParcel(parcelId);
-            
+
             if (parcel == null)
                 throw new NullReferenceException();
 
-            // TODO: State pattern
-            //if (parcel.CurrentState != TransitEventType.Registered)
-            //{
-            //    Console.WriteLine($"Parcel #{ parcel.Id } was already deposited. Press any key to continue...");
-            //    Console.ReadLine();
-                
-            //    return;
-            //}
+            if (parcel.CurrentState != TransitEventType.Registered)
+            {
+                Console.WriteLine($"Parcel #{parcel.Id} was already deposited. Press any key to continue...");
+                Console.ReadLine();
+
+                return;
+            }
 
             var availableLockers = _lockerService.GetVacantLockers();
 
@@ -94,11 +91,12 @@ namespace ParcelDeliveryService.UI
             var chosenLockerId = int.Parse(Console.ReadLine());
 
             _lockerService.DepositParcel(parcel, chosenLockerId);
-            
-            parcel.SenderLockerId = chosenLockerId;
-            parcel.AddDepositEvent();
 
-            _parcelRepository.Update(parcel);
+            parcel.SenderLockerId = chosenLockerId;
+
+            var command = new DepositParcelCommand(
+                _parcelService);
+            command.Execute(parcel);
 
             Console.WriteLine();
             Console.WriteLine("Parcel deposit successful. Press any key to continue...");
@@ -126,7 +124,7 @@ namespace ParcelDeliveryService.UI
             var parcelId = int.Parse(Console.ReadLine());
 
             var result = _lockerService.ReceiveFromLocker(parcelId, lockerId);
-            _parcelService.PickUp(parcelId);
+            PickUpParcel(parcelId);
 
             Console.Clear();
             Console.WriteLine(result ? "Parcel received successfully." : "Parcel have not arrived yet.");
@@ -136,6 +134,18 @@ namespace ParcelDeliveryService.UI
             Console.ReadLine();
         }
 
-        
+        private void PickUpParcel(int parcelId)
+        {
+            var parcel = _parcelService.GetParcel(parcelId);
+
+            if (parcel == null)
+                throw new NullReferenceException();
+
+            var command = new PickUpParcelCommand(_parcelService);
+            command.Execute(parcel);
+
+        }
+
+
     }
 }

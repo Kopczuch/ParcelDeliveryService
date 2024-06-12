@@ -74,15 +74,15 @@ namespace ParcelDeliveryService.UI
                 switch (choice)
                 {
                     case 1:
-                        parcel.ForwardInTransit(_lockerService);
+                        parcel.ForwardInTransit(_parcelService, _lockerService);
                         break;
 
                     case 2:
-                        parcel.Lose();
+                        parcel.Lose(_parcelService);
                         break;
 
                     case 3:
-                        parcel.Destroy();
+                        parcel.Destroy(_parcelService);
                         break;
 
                     case 0:

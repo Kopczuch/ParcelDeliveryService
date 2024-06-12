@@ -1,4 +1,5 @@
-﻿using ParcelDeliveryService.Interfaces;
+﻿using ParcelDeliveryService.Commands;
+using ParcelDeliveryService.Interfaces;
 using ParcelDeliveryService.Models;
 
 namespace ParcelDeliveryService.Core.ParcelStates
@@ -7,17 +8,18 @@ namespace ParcelDeliveryService.Core.ParcelStates
     {
         public override bool IsTerminalState => false;
 
-        public override void HandleForwardInTransit(Parcel parcel, ILockerService lockerService)
+        public override void HandleForwardInTransit(Parcel parcel, IParcelService parcelService, ILockerService lockerService)
         {
-            parcel.AddDeadlineOverEvent();
+            var command = new ApproachPickupDeadlineCommand(parcelService);
+            command.Execute(parcel);
         }
 
-        public override void Lose(Parcel parcel)
+        public override void Lose(Parcel parcel, IParcelService parcelService)
         {
             Console.WriteLine("Parcel cannot be lost.\n");
         }
 
-        public override void Destroy(Parcel parcel)
+        public override void Destroy(Parcel parcel, IParcelService parcelService)
         {
             Console.WriteLine("Parcel cannot be destroyed.\n");
         }

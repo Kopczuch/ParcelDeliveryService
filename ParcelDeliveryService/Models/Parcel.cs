@@ -35,7 +35,7 @@ namespace ParcelDeliveryService.Models
 
 
         public int Id { get; set; }
-        private ParcelState State { get; set; }
+        public ParcelState State { get; set; }
         public string Sender { get; set; }
         public string Recipient { get; set; }
         public DateTime EstimatedDeliveryTime { get; set; }
@@ -129,178 +129,24 @@ namespace ParcelDeliveryService.Models
                 Price = 50;
         }
 
-        public void ForwardInTransit(ILockerService lockerService)
+        public void ForwardInTransit(IParcelService parcelService, ILockerService lockerService)
         {
-            State.HandleForwardInTransit(this, lockerService);
+            State.HandleForwardInTransit(this, parcelService, lockerService);
         }
 
-        public void Lose()
+        public void Lose(IParcelService parcelService)
         {
-            State.Lose(this);
+            State.Lose(this, parcelService);
         }
 
-        public void Destroy()
+        public void Destroy(IParcelService parcelService)
         {
-            State.Destroy(this);
+            State.Destroy(this, parcelService);
         }
 
         public bool IsTransitFinished()
         {
             return State.IsTerminalState;
-        }
-
-        public void AddRegistryEvent()
-        {
-            var transitEvent = new TransitEvent
-            {
-                TimeStamp = DateTime.Now,
-                Location = "At Sender",
-                Type = TransitEventType.Registered
-            };
-
-            TransitHistory.Add(transitEvent);
-        }
-
-        public void AddDepositEvent()
-        {
-            var transitEvent = new TransitEvent
-            {
-                TimeStamp = DateTime.Now,
-                Location = $"Locker #{SenderLockerId}",
-                Type = TransitEventType.Deposited
-            };
-
-            State = new DepositedState();
-
-            TransitHistory.Add(transitEvent);
-        }
-
-        public void AddReceivedFromSenderLockerEvent()
-        {
-            var transitEvent = new TransitEvent
-            {
-                TimeStamp = DateTime.Now,
-                Location = "At Courier",
-                Type = TransitEventType.ReceivedFromSenderLocker
-            };
-
-            State = new ReceivedFromSenderLockerState();
-
-            TransitHistory.Add(transitEvent);
-        }
-
-        public void AddInStorageEvent()
-        {
-            var transitEvent = new TransitEvent
-            {
-                TimeStamp = DateTime.Now,
-                Location = "In Storage",
-                Type = TransitEventType.InStorage
-            };
-
-            State = new InStorageState();
-
-            TransitHistory.Add(transitEvent);
-        }
-
-        public void AddInTransitEvent()
-        {
-            var transitEvent = new TransitEvent
-            {
-                TimeStamp = DateTime.Now,
-                Location = "In Transit",
-                Type = TransitEventType.InTransit
-            };
-
-            State = new InTransitState();
-
-            TransitHistory.Add(transitEvent);
-        }
-
-        public void AddReadyForPickUpEvent()
-        {
-            var transitEvent = new TransitEvent
-            {
-                TimeStamp = DateTime.Now,
-                Location = $"Locker #{RecipientLockerId}",
-                Type = TransitEventType.ReadyForPickUp
-            };
-
-            ActualDeliveryTime = DateTime.Now;
-
-            State = new ReadyForPickupState();
-
-            TransitHistory.Add(transitEvent);
-        }
-
-        public void AddDeadlineOverEvent()
-        {
-            var transitEvent = new TransitEvent
-            {
-                TimeStamp = DateTime.Now,
-                Location = $"Locker #{RecipientLockerId}",
-                Type = TransitEventType.DeadlineOver
-            };
-
-            State = new DeadlineOverState();
-
-            TransitHistory.Add(transitEvent);
-        }
-
-        public void AddInExternalStorageEvent()
-        {
-            var transitEvent = new TransitEvent
-            {
-                TimeStamp = DateTime.Now,
-                Location = "In External Storage",
-                Type = TransitEventType.InExternalStorage
-            };
-
-            State = new InExternalStorageState();
-
-            TransitHistory.Add(transitEvent);
-        }
-
-        public void AddLostEvent()
-        {
-            var transitEvent = new TransitEvent
-            {
-                TimeStamp = DateTime.Now,
-                Location = "Unknown",
-                Type = TransitEventType.Lost
-            };
-
-            State = new LostState();
-
-            TransitHistory.Add(transitEvent);
-        }
-
-        public void AddDestroyedEvent()
-        {
-            var transitEvent = new TransitEvent
-            {
-                TimeStamp = DateTime.Now,
-                Location = "In External Storage",
-                Type = TransitEventType.Destroyed
-            };
-
-            State = new DestroyedState();
-
-            TransitHistory.Add(transitEvent);
-        }
-
-        public void AddPickUpEvent()
-        {
-            var transitEvent = new TransitEvent
-            {
-                TimeStamp = DateTime.Now,
-                Location = "At Recipient",
-                Type = TransitEventType.PickedUp
-            };
-
-            State = new PickedUpState();
-
-            TransitHistory.Add(transitEvent);
         }
     }
 }

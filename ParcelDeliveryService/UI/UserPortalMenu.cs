@@ -50,7 +50,7 @@ namespace ParcelDeliveryService.UI
                             ShowUsers();
                             break;
                         case 5:
-                            RerouteParcel(); // New case for rerouting a parcel
+                            RerouteParcel();
                             break;
                         case 6:
                             ExpandLocker();
@@ -71,7 +71,7 @@ namespace ParcelDeliveryService.UI
             Console.WriteLine("[2] Track Parcel");
             Console.WriteLine("[3] Add User");
             Console.WriteLine("[4] Show Users");
-            Console.WriteLine("[5] Reroute Parcel"); // New menu option for rerouting a parcel
+            Console.WriteLine("[5] Reroute Parcel");
             Console.WriteLine("[6] Expand Lcoekr"); 
             Console.WriteLine("[0] Go Back");
 
@@ -118,13 +118,11 @@ namespace ParcelDeliveryService.UI
                 compositeLocker.AddSlot(new Slot { Size = size, Vacancy = VacancyState.Vacant });
             }
 
-            // Update locker with additional slots
             foreach (var slot in compositeLocker.AdditionalSlots)
             {
                 selectedLocker.Slots.Add(slot);
             }
 
-            // Update locker in repository
             _lockerRepository.Update(selectedLocker);
 
             Console.WriteLine($"Locker #{lockerId} expanded successfully.");
@@ -315,7 +313,6 @@ namespace ParcelDeliveryService.UI
                 Address = address
             };*/
 
-            // Assuming _userService is a service that handles user related operations
             //_userService.AddUser(newUser);
 
             Console.WriteLine("User created successfully. Press any key to continue...");

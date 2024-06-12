@@ -34,7 +34,7 @@ namespace ParcelDeliveryService
             
 
             var userPortalMenu = new UserPortalMenu(parcelService, lockerService,lockerRepository, rerouteService);
-            var lockerMenu = new LockerMenu(lockerService, parcelService, parcelRepository);
+            var lockerMenu = new LockerMenu(lockerService, parcelService);
 
             var transitMenu = new TransitMenu(parcelService, lockerService);
 
