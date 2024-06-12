@@ -1,4 +1,4 @@
-﻿using ParcelDeliveryService.Models.Parcels;
+﻿using ParcelDeliveryService.Models;
 
 namespace ParcelDeliveryService.Interfaces
 {

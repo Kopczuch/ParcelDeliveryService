@@ -1,6 +1,4 @@
-﻿using ParcelDeliveryService.Core;
-using ParcelDeliveryService.Interfaces;
-using ParcelDeliveryService.Models.Parcels;
+﻿using ParcelDeliveryService.Interfaces;
 
 namespace ParcelDeliveryService.UI
 {
@@ -80,6 +78,11 @@ namespace ParcelDeliveryService.UI
                         break;
 
                     case 2:
+                        parcel.Lose();
+                        break;
+
+                    case 3:
+                        parcel.Destroy();
                         break;
 
                     case 0:

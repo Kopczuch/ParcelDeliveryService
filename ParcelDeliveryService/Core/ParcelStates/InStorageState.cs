@@ -1,14 +1,15 @@
 ﻿using ParcelDeliveryService.Interfaces;
+using ParcelDeliveryService.Models;
 
-namespace ParcelDeliveryService.Models.Parcels.ParcelStates
+namespace ParcelDeliveryService.Core.ParcelStates
 {
-    public class InExternalStorageState : ParcelState
+    public class InStorageState : ParcelState
     {
         public override bool IsTerminalState => false;
 
         public override void HandleForwardInTransit(Parcel parcel, ILockerService lockerService)
         {
-            base.Destroy(parcel);
+            parcel.AddInTransitEvent();
         }
     }
 }

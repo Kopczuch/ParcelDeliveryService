@@ -1,8 +1,9 @@
 ﻿using ParcelDeliveryService.Interfaces;
+using ParcelDeliveryService.Models;
 
-namespace ParcelDeliveryService.Models.Parcels.ParcelStates
+namespace ParcelDeliveryService.Core.ParcelStates
 {
-    public class PickedUpState : ParcelState
+    public class DestroyedState : ParcelState
     {
         public override bool IsTerminalState => true;
 
@@ -13,12 +14,14 @@ namespace ParcelDeliveryService.Models.Parcels.ParcelStates
 
         public override void Destroy(Parcel parcel)
         {
-            Console.WriteLine("Picked up parcel cannot be destroyed.\n");
+            Console.WriteLine("Parcel was already destroyed.\n");
+            Console.ReadLine();
         }
 
         public override void Lose(Parcel parcel)
         {
-            Console.WriteLine("Picked up parcel cannot be lost.\n");
+            Console.WriteLine("Destroyed parcel cannot be lost.\n");
+            Console.ReadLine();
         }
     }
 }

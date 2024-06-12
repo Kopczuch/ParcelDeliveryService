@@ -1,8 +1,8 @@
 ﻿using ParcelDeliveryService.Core;
+using ParcelDeliveryService.Core.ParcelStates;
 using ParcelDeliveryService.Interfaces;
-using ParcelDeliveryService.Models.Parcels.ParcelStates;
 
-namespace ParcelDeliveryService.Models.Parcels
+namespace ParcelDeliveryService.Models
 {
     public class Parcel
     {
@@ -118,6 +118,16 @@ namespace ParcelDeliveryService.Models.Parcels
         public void ForwardInTransit(ILockerService lockerService)
         {
             State.HandleForwardInTransit(this, lockerService);
+        }
+
+        public void Lose()
+        {
+            State.Lose(this);
+        }
+
+        public void Destroy()
+        {
+            State.Destroy(this);
         }
 
         public bool IsTransitFinished()

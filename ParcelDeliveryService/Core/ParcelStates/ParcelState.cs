@@ -1,6 +1,7 @@
 ﻿using ParcelDeliveryService.Interfaces;
+using ParcelDeliveryService.Models;
 
-namespace ParcelDeliveryService.Models.Parcels.ParcelStates
+namespace ParcelDeliveryService.Core.ParcelStates
 {
     public abstract class ParcelState
     {
