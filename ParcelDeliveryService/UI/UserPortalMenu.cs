@@ -263,10 +263,11 @@ namespace ParcelDeliveryService.UI
                 Console.ResetColor();
                 ChooseSize(parcel);
 
-                var chosenLockerId = ChooseRecipientLocker();
-                _lockerService.ReserveSlot(parcel, chosenLockerId);
+                Console.WriteLine("\nChoose the locker where you want to deposit the parcel.");
+                var chosenSenderLockerId = ChooseLocker();
 
-                parcel.RecipientLockerId = chosenLockerId;
+                Console.WriteLine("\nChoose the receipient's locker.");
+                var chosenReceipientLockerId = ChooseLocker();
 
                 Console.WriteLine();
                 Console.Write("Continue to payment? [y/n]: ");
@@ -274,6 +275,11 @@ namespace ParcelDeliveryService.UI
 
                 if (decision != "y")
                     return;
+
+                _lockerService.ReserveSlot(parcel, chosenSenderLockerId);
+                parcel.SenderLockerId = chosenSenderLockerId;
+                _lockerService.ReserveSlot(parcel, chosenReceipientLockerId);
+                parcel.RecipientLockerId = chosenReceipientLockerId;
 
                 PayForDelivery(parcel);
 
@@ -321,21 +327,20 @@ namespace ParcelDeliveryService.UI
             }
         }
 
-        private int ChooseRecipientLocker()
+        private int ChooseLocker()
         {
             while (true)
             {
-                Console.WriteLine();
                 var availableLockers = _lockerService.GetVacantLockers();
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Available recipient lockers:");
+                Console.WriteLine("Available lockers:");
                 foreach (var locker in availableLockers)
                 {
                     locker.Display();
                 }
                 Console.ResetColor();
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write("Recipient Locker Id: ");
+                Console.Write("Chosen Locker Id: ");
                 Console.ResetColor();
                 if (int.TryParse(Console.ReadLine(), out var chosenLockerId))
                 {

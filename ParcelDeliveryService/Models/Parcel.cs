@@ -12,22 +12,13 @@ namespace ParcelDeliveryService.Models
             State = new RegisteredState();
         }
 
-        public Parcel(int senderId, int recipientId, Size size, int recipientLockerId)
-        {
-            SenderId = senderId;
-            RecipientId = recipientId;
-            Size = size;
-            RecipientLockerId = recipientLockerId;
-            TransitHistory = new List<TransitEvent>();
-            State = new RegisteredState();
-        }
-
-        public Parcel(int id, int senderId, int recipientId, Size size, int recipientLockerId)
+        public Parcel(int id, int senderId, int recipientId, Size size, int senderLockerId, int recipientLockerId)
         {
             Id = id;
             SenderId = senderId;
             RecipientId = recipientId;
             Size = size;
+            SenderLockerId = senderLockerId;
             RecipientLockerId = recipientLockerId;
             TransitHistory = new List<TransitEvent>();
             State = new RegisteredState();
@@ -75,7 +66,7 @@ namespace ParcelDeliveryService.Models
             Console.WriteLine($"{Id}");
 
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Write("Sender: ");
+            Console.Write("Sender Id: ");
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine($"{SenderId}");
 
@@ -85,7 +76,7 @@ namespace ParcelDeliveryService.Models
             Console.WriteLine($"{SenderLockerId}");
 
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Write("Recipient: ");
+            Console.Write("Recipient Id: ");
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine($"{RecipientId}");
 
