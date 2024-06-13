@@ -86,8 +86,9 @@ namespace ParcelDeliveryService.UI
                     if (parcel == null)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Parcel not found. Returning to the previous menu.");
+                        Console.WriteLine("Parcel not found. Press any key to continue...");
                         Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.ReadLine();
                         return;
                     }
 
@@ -120,15 +121,15 @@ namespace ParcelDeliveryService.UI
                         switch (choice)
                         {
                             case 1:
-                                parcel.ForwardInTransit(_lockerService);
+                                parcel.ForwardInTransit(_parcelService, _lockerService);
                                 break;
 
                             case 2:
-                                parcel.Lose();
+                                parcel.Lose(_parcelService);
                                 break;
 
                             case 3:
-                                parcel.Destroy();
+                                parcel.Destroy(_parcelService);
                                 break;
 
                             case 0:
@@ -136,25 +137,28 @@ namespace ParcelDeliveryService.UI
 
                             default:
                                 Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("Invalid choice. Please select a valid operation.");
+                                Console.WriteLine("Invalid choice. Please select a valid operation. Press any key to continue...");
                                 Console.ForegroundColor = ConsoleColor.Gray;
+                                Console.ReadLine();
                                 break;
                         }
                     }
                     else
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Invalid input. Please enter a number.");
+                        Console.WriteLine("Invalid input. Please enter a number. Press any key to continue...");
                         Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.ReadLine();
                     }
                 }
                 catch (Exception ex)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"An error occurred while managing the parcel: {ex.Message}");
+                    Console.WriteLine($"An error occurred while managing the parcel: {ex.Message}. Press any key to continue...");
                     Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.ReadLine();
                 }
-                
+
             }
         }
     }

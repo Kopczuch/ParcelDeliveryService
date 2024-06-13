@@ -41,26 +41,34 @@ namespace ParcelDeliveryService.UI
                             case 1:
                                 RegisterParcel();
                                 break;
+
                             case 2:
                                 TrackParcel();
                                 break;
+
                             case 3:
                                 RegisterUser();
                                 break;
+
                             case 4:
                                 LoginUser();
                                 break;
+
                             case 5:
                                 ShowUsers();
                                 break;
+
                             case 6:
                                 RerouteParcel();
                                 break;
+
                             case 7:
                                 ExpandLocker();
                                 break;
+
                             case 0:
                                 return;
+
                             default:
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.WriteLine("Invalid option. Please choose a valid operation.");
@@ -128,7 +136,7 @@ namespace ParcelDeliveryService.UI
                     Console.WriteLine($"[{locker.Id}] Locker #{locker.Id}");
                     Console.ResetColor();
                 }
-                
+
 
                 Console.Write("Enter locker ID: ");
                 if (!int.TryParse(Console.ReadLine(), out var lockerId))
@@ -264,7 +272,7 @@ namespace ParcelDeliveryService.UI
                 Console.Write("Continue to payment? [y/n]: ");
                 var decision = Console.ReadLine()?.ToLower();
 
-                if (decision != "y") 
+                if (decision != "y")
                     return;
 
                 PayForDelivery(parcel);
@@ -333,7 +341,7 @@ namespace ParcelDeliveryService.UI
                 {
                     return chosenLockerId;
                 }
-                
+
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Invalid locker ID. Please enter a valid number.");
                 Console.ResetColor();

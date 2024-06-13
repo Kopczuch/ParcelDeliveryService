@@ -1,4 +1,4 @@
-﻿using ParcelDeliveryService.Core;
+﻿using ParcelDeliveryService.Commands;
 using ParcelDeliveryService.Interfaces;
 using ParcelDeliveryService.Models;
 
@@ -8,16 +8,13 @@ namespace ParcelDeliveryService.UI
     {
         private readonly ILockerService _lockerService;
         private readonly IParcelService _parcelService;
-        private readonly IParcelRepository _parcelRepository;
 
         public LockerMenu(
             ILockerService lockerService,
-            IParcelService parcelService,
-            IParcelRepository parcelRepository)
+            IParcelService parcelService)
         {
             _lockerService = lockerService;
             _parcelService = parcelService;
-            _parcelRepository = parcelRepository;   
         }
 
         public void Run()
@@ -41,8 +38,6 @@ namespace ParcelDeliveryService.UI
                         case 3:
                             ChangeAddress();
                             break;
-
-
 
                         case 0:
                             return;
@@ -79,14 +74,18 @@ namespace ParcelDeliveryService.UI
                 Console.Write("Provide parcel ID: ");
                 if (!int.TryParse(Console.ReadLine(), out var parcelId))
                 {
-                    Console.WriteLine("Invalid parcel ID. Please enter a valid number.");
+                    Console.WriteLine("Invalid parcel ID. Please enter a valid number. Press any key to continue...");
+                    Console.ReadLine();
+
                     return;
                 }
 
                 var parcel = _parcelService.GetParcel(parcelId);
                 if (parcel == null)
                 {
-                    Console.WriteLine($"Parcel with ID {parcelId} not found.");
+                    Console.WriteLine($"Parcel with ID {parcelId} not found. Press any key to continue...");
+                    Console.ReadLine();
+
                     return;
                 }
 
@@ -110,9 +109,9 @@ namespace ParcelDeliveryService.UI
                 _lockerService.DepositParcel(parcel, chosenLockerId);
 
                 parcel.SenderLockerId = chosenLockerId;
-                parcel.AddDepositEvent();
 
-                _parcelRepository.Update(parcel);
+                var command = new DepositParcelCommand(_parcelService);
+                command.Execute(parcel);
 
                 Console.WriteLine();
                 Console.WriteLine("Parcel deposit successful. Press any key to continue...");
@@ -129,46 +128,31 @@ namespace ParcelDeliveryService.UI
             try
             {
                 Console.Clear();
+                Console.WriteLine("Go to your locker.");
+                var lockers = _lockerService.GetLockers();
+
+                foreach (var locker in lockers)
+                {
+                    Console.WriteLine();
+                    locker.Display();
+                }
+
+                Console.Write("Locker Id: ");
+                var lockerId = int.Parse(Console.ReadLine());
+
+                Console.Clear();
+                Console.WriteLine($"Locker #{lockerId}\n");
                 Console.Write("Provide parcel ID: ");
-                if (!int.TryParse(Console.ReadLine(), out var parcelId))
-                {
-                    Console.WriteLine("Invalid parcel ID. Please enter a valid number.");
-                    return;
-                }
+                var parcelId = int.Parse(Console.ReadLine());
 
-                var parcel = _parcelService.GetParcel(parcelId);
-                if (parcel == null)
-                {
-                    Console.WriteLine($"Parcel with ID {parcelId} not found.");
-                    return;
-                }
+                var result = _lockerService.ReceiveFromLocker(parcelId, lockerId);
+                PickUpParcel(parcelId);
 
-                var availableLockers = _lockerService.GetVacantLockers();
-                if (!availableLockers.Any())
-                {
-                    Console.WriteLine("No available lockers.");
-                    return;
-                }
-
-                DisplayAvailableLockers(availableLockers);
+                Console.Clear();
+                Console.WriteLine(result ? "Parcel received successfully." : "Parcel have not arrived yet.");
 
                 Console.WriteLine();
-                Console.Write("Pass chosen locker ID: ");
-                if (!int.TryParse(Console.ReadLine(), out var chosenLockerId))
-                {
-                    Console.WriteLine("Invalid locker ID. Please enter a valid number.");
-                    return;
-                }
-
-                _lockerService.DepositParcel(parcel, chosenLockerId);
-
-                parcel.SenderLockerId = chosenLockerId;
-                parcel.AddDepositEvent();
-
-                _parcelRepository.Update(parcel);
-
-                Console.WriteLine();
-                Console.WriteLine("Parcel deposit successful. Press any key to continue...");
+                Console.WriteLine("Press any key to continue...");
                 Console.ReadLine();
             }
             catch (Exception ex)
@@ -231,6 +215,7 @@ namespace ParcelDeliveryService.UI
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
+
         private void DisplayAvailableLockers(IEnumerable<Locker> lockers)
         {
             foreach (var locker in lockers)
@@ -238,6 +223,18 @@ namespace ParcelDeliveryService.UI
                 Console.WriteLine();
                 locker.Display();
             }
+        }
+
+        private void PickUpParcel(int parcelId)
+        {
+            var parcel = _parcelService.GetParcel(parcelId);
+
+            if (parcel == null)
+                throw new NullReferenceException();
+
+            var command = new PickUpParcelCommand(_parcelService);
+            command.Execute(parcel);
+
         }
     }
 }

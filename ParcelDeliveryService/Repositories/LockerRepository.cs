@@ -1,11 +1,6 @@
 ﻿using ParcelDeliveryService.Core;
 using ParcelDeliveryService.Interfaces;
 using ParcelDeliveryService.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ParcelDeliveryService.Repositories
 {
@@ -81,7 +76,6 @@ namespace ParcelDeliveryService.Repositories
                 }
             };
         }
-
 
         public void Add(Locker locker)
         {

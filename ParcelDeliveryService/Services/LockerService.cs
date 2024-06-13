@@ -1,7 +1,6 @@
 ﻿using ParcelDeliveryService.Core;
 using ParcelDeliveryService.Interfaces;
 using ParcelDeliveryService.Models;
-using System.Runtime.CompilerServices;
 
 namespace ParcelDeliveryService.Services
 {

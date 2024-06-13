@@ -7,9 +7,9 @@ namespace ParcelDeliveryService.Core.ParcelStates
     {
         public override bool IsTerminalState => false;
 
-        public override void HandleForwardInTransit(Parcel parcel, ILockerService lockerService)
+        public override void HandleForwardInTransit(Parcel parcel, IParcelService parcelService, ILockerService lockerService)
         {
-            base.Destroy(parcel);
+            base.Destroy(parcel, parcelService);
         }
     }
 }
