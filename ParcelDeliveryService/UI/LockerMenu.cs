@@ -43,6 +43,9 @@ namespace ParcelDeliveryService.UI
                         case 4:
                             ReceiveParcelFromExternalStorage();
                             break;
+                        case 5:
+                            DisplayParcelHistory();
+                            break;
 
                         case 0:
                             return;
@@ -66,10 +69,37 @@ namespace ParcelDeliveryService.UI
             Console.WriteLine("[2] Receive Parcel");
             Console.WriteLine("[3] Change Locker Address");
             Console.WriteLine("[4] Receive Parcel From External Storage");
+            Console.WriteLine("[5] Display Parcel History [In Locker]");
             Console.WriteLine("[0] Go Back");
             Console.WriteLine();
             Console.Write("Choose Operation: ");
             return Console.ReadLine();
+        }
+
+        private void DisplayParcelHistory()
+        {
+            try
+            {
+                Console.Clear();
+                var lockers = _lockerService.GetLockers();
+
+                foreach (var locker in lockers)
+                {
+                    Console.WriteLine($"Locker #{locker.Id}");
+                    foreach (var historyItem in locker.LockerHistory)
+                    {
+                        historyItem.Display();
+                        Console.WriteLine();
+                    }
+                }
+
+                Console.WriteLine("Press any key to continue...");
+                Console.ReadKey();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
 
         private void DepositParcel()

@@ -83,13 +83,7 @@ namespace ParcelDeliveryService.UI
                     Console.WriteLine($"An error occurred: {ex.Message}");
                     Console.ResetColor();
                 }
-                finally
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("Press any key to continue...");
-                    Console.ResetColor();
-                    Console.ReadKey();
-                }
+                
             }
         }
 
