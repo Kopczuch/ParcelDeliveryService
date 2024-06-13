@@ -74,14 +74,16 @@ namespace ParcelDeliveryService.UI
         private string? DisplayMenu()
         {
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("[1] Deposit Parcel");
             Console.WriteLine("[2] Receive Parcel");
             Console.WriteLine("[3] Change Locker Address");
             Console.WriteLine("[4] Receive Parcel From External Storage");
             Console.WriteLine("[5] Display Parcel History [In Locker]");
             Console.WriteLine("[6] Expand Locker");
-
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("[0] Go Back");
+            Console.ResetColor();
             Console.WriteLine();
             Console.Write("Choose Operation: ");
             return Console.ReadLine();

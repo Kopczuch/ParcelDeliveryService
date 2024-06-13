@@ -399,6 +399,7 @@ namespace ParcelDeliveryService.UI
             Console.Clear();
             try
             {
+                Console.ResetColor();
                 Console.WriteLine("Enter your credentials to sign in:");
                 var authorized = false;
 
@@ -414,7 +415,10 @@ namespace ParcelDeliveryService.UI
 
                     if (authorized)
                     {
-                        Console.WriteLine("Success! You are now logged in.");
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Success! You are now logged in. Press any key to continue...");
+                        Console.ResetColor();
+                        Console.ReadKey();
                         return;
                     }
 
@@ -443,6 +447,10 @@ namespace ParcelDeliveryService.UI
                 {
                     user.Display();
                 }
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("\nPress any key to continue...");
+                Console.ResetColor();
+                Console.ReadKey();
             }
             catch (Exception ex)
             {
