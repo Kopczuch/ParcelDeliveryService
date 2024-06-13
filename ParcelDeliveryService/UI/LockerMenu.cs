@@ -2,6 +2,7 @@
 using ParcelDeliveryService.Core;
 using ParcelDeliveryService.Interfaces;
 using ParcelDeliveryService.Models;
+using ParcelDeliveryService.Repositories;
 
 namespace ParcelDeliveryService.UI
 {
@@ -9,13 +10,16 @@ namespace ParcelDeliveryService.UI
     {
         private readonly ILockerService _lockerService;
         private readonly IParcelService _parcelService;
+        private readonly ILockerRepository _lockerRepository;
 
         public LockerMenu(
             ILockerService lockerService,
-            IParcelService parcelService)
+            IParcelService parcelService,
+            ILockerRepository lockerRepository)
         {
             _lockerService = lockerService;
             _parcelService = parcelService;
+            _lockerRepository = lockerRepository;
         }
 
         public void Run()
@@ -46,6 +50,9 @@ namespace ParcelDeliveryService.UI
                         case 5:
                             DisplayParcelHistory();
                             break;
+                        case 6:
+                            ExpandLocker();
+                            break;
 
                         case 0:
                             return;
@@ -72,6 +79,8 @@ namespace ParcelDeliveryService.UI
             Console.WriteLine("[3] Change Locker Address");
             Console.WriteLine("[4] Receive Parcel From External Storage");
             Console.WriteLine("[5] Display Parcel History [In Locker]");
+            Console.WriteLine("[6] Expand Locker");
+
             Console.WriteLine("[0] Go Back");
             Console.WriteLine();
             Console.Write("Choose Operation: ");
@@ -388,6 +397,90 @@ namespace ParcelDeliveryService.UI
         {
             var command = new ExtendParcelDeadlineCommand(_parcelService);
             command.Execute(parcel);
+        }
+
+        private void ExpandLocker()
+        {
+            Console.Clear();
+            try
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Select a locker to expand:");
+                Console.ResetColor();
+
+                var lockers = _lockerService.GetLockers();
+                foreach (var locker in lockers)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"[{locker.Id}] Locker #{locker.Id}");
+                    Console.ResetColor();
+                }
+
+
+                Console.Write("Enter locker ID: ");
+                if (!int.TryParse(Console.ReadLine(), out var lockerId))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invalid locker ID.");
+                    Console.ResetColor();
+                    return;
+                }
+
+                var selectedLocker = lockers.FirstOrDefault(l => l.Id == lockerId);
+                if (selectedLocker == null)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invalid locker ID. Press any key to continue...");
+                    Console.ResetColor();
+                    Console.ReadLine();
+                    return;
+                }
+
+                Console.Write("Enter the number of slots to add: ");
+                if (!int.TryParse(Console.ReadLine(), out var slotsToAdd))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invalid number of slots. Press any key to continue...");
+                    Console.ResetColor();
+                    Console.ReadLine();
+                    return;
+                }
+
+                var compositeLocker = new LockerComposite(selectedLocker);
+                for (int i = 0; i < slotsToAdd; i++)
+                {
+                    Console.WriteLine($"Slot {i + 1}:");
+                    Console.Write("Enter slot size (Small, Medium, Large): ");
+                    if (!Enum.TryParse<Size>(Console.ReadLine(), out var size))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid slot size. Operation cancelled.");
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ResetColor();
+                        Console.ReadLine();
+                        return;
+                    }
+                    compositeLocker.AddSlot(new Slot { Size = size, Vacancy = VacancyState.Vacant });
+                }
+
+                foreach (var slot in compositeLocker.AdditionalSlots)
+                {
+                    selectedLocker.Slots.Add(slot);
+                }
+
+                _lockerRepository.Update(selectedLocker);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"Locker #{lockerId} expanded successfully. Press any key to continue...");
+                Console.ResetColor();
+                Console.ReadLine();
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"An error occurred while expanding the locker: {ex.Message} Press any key to continue...");
+                Console.ResetColor();
+                Console.ReadLine();
+            }
         }
     }
 }

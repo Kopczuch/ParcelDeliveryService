@@ -62,10 +62,6 @@ namespace ParcelDeliveryService.UI
                                 RerouteParcel();
                                 break;
 
-                            case 7:
-                                ExpandLocker();
-                                break;
-
                             case 0:
                                 return;
 
@@ -105,8 +101,6 @@ namespace ParcelDeliveryService.UI
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[6] Reroute Parcel");
             Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.WriteLine("[7] Expand Locker");
-            Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("[0] Go Back");
             Console.ResetColor();
             Console.WriteLine();
@@ -114,87 +108,6 @@ namespace ParcelDeliveryService.UI
             Console.Write("Choose Operation: ");
             Console.ResetColor();
             return Console.ReadLine();
-        }
-
-        private void ExpandLocker()
-        {
-            Console.Clear();
-            try
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Select a locker to expand:");
-                Console.ResetColor();
-
-                var lockers = _lockerService.GetLockers();
-                foreach (var locker in lockers)
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine($"[{locker.Id}] Locker #{locker.Id}");
-                    Console.ResetColor();
-                }
-
-
-                Console.Write("Enter locker ID: ");
-                if (!int.TryParse(Console.ReadLine(), out var lockerId))
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Invalid locker ID.");
-                    Console.ResetColor();
-                    return;
-                }
-
-                var selectedLocker = lockers.FirstOrDefault(l => l.Id == lockerId);
-                if (selectedLocker == null)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Invalid locker ID.");
-                    Console.ResetColor();
-                    return;
-                }
-
-                Console.Write("Enter the number of slots to add: ");
-                if (!int.TryParse(Console.ReadLine(), out var slotsToAdd))
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Invalid number of slots. Press any key to continue...");
-                    Console.ResetColor();
-                    Console.ReadLine();
-                    return;
-                }
-
-                var compositeLocker = new LockerComposite(selectedLocker);
-                for (int i = 0; i < slotsToAdd; i++)
-                {
-                    Console.WriteLine($"Slot {i + 1}:");
-                    Console.Write("Enter slot size (Small, Medium, Large): ");
-                    if (!Enum.TryParse<Size>(Console.ReadLine(), out var size))
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Invalid slot size.");
-                        Console.ResetColor();
-                        return;
-                    }
-                    compositeLocker.AddSlot(new Slot { Size = size, Vacancy = VacancyState.Vacant });
-                }
-
-                foreach (var slot in compositeLocker.AdditionalSlots)
-                {
-                    selectedLocker.Slots.Add(slot);
-                }
-
-                _lockerRepository.Update(selectedLocker);
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"Locker #{lockerId} expanded successfully. Press any key to continue...");
-                Console.ResetColor();
-                Console.ReadLine();
-            }
-            catch (Exception ex)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"An error occurred while expanding the locker: {ex.Message} Press any key to continue...");
-                Console.ResetColor();
-                Console.ReadLine();
-            }
         }
 
         private void RegisterParcel()
