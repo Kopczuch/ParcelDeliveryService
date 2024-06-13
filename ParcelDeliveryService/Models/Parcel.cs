@@ -12,13 +12,12 @@ namespace ParcelDeliveryService.Models
             State = new RegisteredState();
         }
 
-        public Parcel(int id, int senderId, int recipientId, Size size, int senderLockerId, int recipientLockerId)
+        public Parcel(int id, int senderId, int recipientId, Size size, int recipientLockerId)
         {
             Id = id;
             SenderId = senderId;
             RecipientId = recipientId;
             Size = size;
-            SenderLockerId = senderLockerId;
             RecipientLockerId = recipientLockerId;
             TransitHistory = new List<TransitEvent>();
             State = new RegisteredState();

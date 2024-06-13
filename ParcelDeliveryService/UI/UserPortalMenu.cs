@@ -263,11 +263,7 @@ namespace ParcelDeliveryService.UI
                 Console.ResetColor();
                 ChooseSize(parcel);
 
-                Console.WriteLine("\nChoose the locker where you want to deposit the parcel.");
-                var chosenSenderLockerId = ChooseLocker();
-
-                Console.WriteLine("\nChoose the receipient's locker.");
-                var chosenReceipientLockerId = ChooseLocker();
+                var chosenReceipientLockerId = ChooseReceipientLocker();
 
                 Console.WriteLine();
                 Console.Write("Continue to payment? [y/n]: ");
@@ -276,8 +272,6 @@ namespace ParcelDeliveryService.UI
                 if (decision != "y")
                     return;
 
-                _lockerService.ReserveSlot(parcel, chosenSenderLockerId);
-                parcel.SenderLockerId = chosenSenderLockerId;
                 _lockerService.ReserveSlot(parcel, chosenReceipientLockerId);
                 parcel.RecipientLockerId = chosenReceipientLockerId;
 
@@ -327,20 +321,20 @@ namespace ParcelDeliveryService.UI
             }
         }
 
-        private int ChooseLocker()
+        private int ChooseReceipientLocker()
         {
             while (true)
             {
                 var availableLockers = _lockerService.GetVacantLockers();
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Available lockers:");
+                Console.WriteLine("Available recipient lockers:");
                 foreach (var locker in availableLockers)
                 {
                     locker.Display();
                 }
                 Console.ResetColor();
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write("Chosen Locker Id: ");
+                Console.Write("Chosen Receipient Locker Id: ");
                 Console.ResetColor();
                 if (int.TryParse(Console.ReadLine(), out var chosenLockerId))
                 {

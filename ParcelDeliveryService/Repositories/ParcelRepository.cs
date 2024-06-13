@@ -11,7 +11,7 @@ namespace ParcelDeliveryService.Repositories
         public ParcelRepository()
         {
             _parcels = new List<Parcel> {
-                new Parcel(1, 2, 1, Size.Small, 2, 1)
+                new Parcel(1, 2, 1, Size.Small, 1)
                 {
                     TransitHistory = new List<TransitEvent>
                     {
@@ -22,7 +22,7 @@ namespace ParcelDeliveryService.Repositories
                         }
                     }
                 },
-                new Parcel(2, 2, 3, Size.Large, 2, 3)
+                new Parcel(2, 2, 3, Size.Large, 3)
                 {
                     TransitHistory = new List<TransitEvent>
                     {
@@ -33,7 +33,7 @@ namespace ParcelDeliveryService.Repositories
                         }
                     }
                 },
-                new Parcel(3, 4, 2, Size.Medium, 3, 2)
+                new Parcel(3, 4, 2, Size.Medium, 2)
                 {
                     TransitHistory = new List<TransitEvent>
                     {
