@@ -65,7 +65,7 @@ namespace ParcelDeliveryService.Services
             if (locker == null)
                 throw new NullReferenceException();
 
-            bool output = locker.ReceiveFromLocker(parcelId);
+            var output = locker.ReceiveFromLocker(parcelId);
             if(output)
             {
                 _lockerRepository.Update(locker);

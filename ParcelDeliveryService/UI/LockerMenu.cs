@@ -1,4 +1,5 @@
 ﻿using ParcelDeliveryService.Commands;
+using ParcelDeliveryService.Core;
 using ParcelDeliveryService.Interfaces;
 using ParcelDeliveryService.Models;
 
@@ -39,6 +40,10 @@ namespace ParcelDeliveryService.UI
                             ChangeAddress();
                             break;
 
+                        case 4:
+                            ReceiveParcelFromExternalStorage();
+                            break;
+
                         case 0:
                             return;
 
@@ -60,6 +65,7 @@ namespace ParcelDeliveryService.UI
             Console.WriteLine("[1] Deposit Parcel");
             Console.WriteLine("[2] Receive Parcel");
             Console.WriteLine("[3] Change Locker Address");
+            Console.WriteLine("[4] Receive Parcel From External Storage");
             Console.WriteLine("[0] Go Back");
             Console.WriteLine();
             Console.Write("Choose Operation: ");
@@ -143,13 +149,69 @@ namespace ParcelDeliveryService.UI
                 Console.Clear();
                 Console.WriteLine($"Locker #{lockerId}\n");
                 Console.Write("Provide parcel ID: ");
-                var parcelId = int.Parse(Console.ReadLine());
 
-                var result = _lockerService.ReceiveFromLocker(parcelId, lockerId);
-                PickUpParcel(parcelId);
+                var parcelId = int.Parse(Console.ReadLine());
+                var parcel = _parcelService.GetParcel(parcelId);
+
+                if (parcel == null)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Parcel not found");
+                    Console.WriteLine("Press any key to continue...");
+                    Console.ReadLine();
+
+                    return;
+                }
 
                 Console.Clear();
-                Console.WriteLine(result ? "Parcel received successfully." : "Parcel have not arrived yet.");
+
+                if (parcel.CurrentState is TransitEventType.InExternalStorage or TransitEventType.DeadlineOver)
+                {
+                    Console.WriteLine("Parcel was not picked up during the mandatory 48 hours curfew.");
+
+                    if (!parcel.CanExtend)
+                    {
+                        Console.WriteLine("You can no longer extend parcel receiving period. Press any key to continue...");
+                        Console.ReadLine();
+
+                        return;
+                    }
+
+                    parcel.CalculateAdditionalFee();
+
+                    Console.WriteLine(parcel.CurrentState is TransitEventType.DeadlineOver
+                        ? "Parcel is still in the locker."
+                        : "It currently resides in our external storage");
+
+                    Console.WriteLine("You can still receive your parcel after paying additional fee.");
+                    Console.WriteLine($"Do you want to pay ${parcel.AdditionalCosts} to receive your parcel? [y/n]:");
+
+                    var decision = Console.ReadLine()?.ToLower();
+
+                    if (decision != "y")
+                        return;
+
+                    parcel.CanExtend = false;
+
+                    if (parcel.CurrentState is TransitEventType.DeadlineOver)
+                        PickUpParcel(parcel);
+                    else
+                        ExtendDeadline(parcel);
+
+                    return;
+                }
+
+                var result = _lockerService.ReceiveFromLocker(parcelId, lockerId);
+
+                if (result)
+                {
+                    PickUpParcel(parcel);
+                    Console.WriteLine("Parcel received successfully.");
+                }
+                else
+                {
+                    Console.WriteLine("Parcel has not arrived yet.");
+                }
 
                 Console.WriteLine();
                 Console.WriteLine("Press any key to continue...");
@@ -216,6 +278,41 @@ namespace ParcelDeliveryService.UI
             }
         }
 
+        private void ReceiveParcelFromExternalStorage()
+        {
+            try
+            {
+                Console.Clear();
+                Console.WriteLine("Pass parcel id: ");
+                if (!int.TryParse(Console.ReadLine(), out var externalStorageParcelId))
+                {
+                    Console.WriteLine("Invalid locker ID. Please enter a valid number.");
+                    return;
+                }
+
+                var parcels = _parcelService.ListParcels();
+
+                var externalStorageParcel = parcels.FirstOrDefault(p =>
+                        p.Id == externalStorageParcelId && p.CurrentState == TransitEventType.DeadlineExtended);
+
+                if (externalStorageParcel == null)
+                {
+                    Console.WriteLine("No eligible parcels to be received from external storage. Press any key to continue...");
+                    Console.ReadLine();
+                    return;
+                }
+
+                PickUpParcel(externalStorageParcel);
+                Console.WriteLine("Parcel picked up from external storage. Press any key to continue...");
+                Console.ReadLine();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
         private void DisplayAvailableLockers(IEnumerable<Locker> lockers)
         {
             foreach (var locker in lockers)
@@ -225,16 +322,16 @@ namespace ParcelDeliveryService.UI
             }
         }
 
-        private void PickUpParcel(int parcelId)
+        private void PickUpParcel(Parcel parcel)
         {
-            var parcel = _parcelService.GetParcel(parcelId);
-
-            if (parcel == null)
-                throw new NullReferenceException();
-
             var command = new PickUpParcelCommand(_parcelService);
             command.Execute(parcel);
+        }
 
+        private void ExtendDeadline(Parcel parcel)
+        {
+            var command = new ExtendParcelDeadlineCommand(_parcelService);
+            command.Execute(parcel);
         }
     }
 }

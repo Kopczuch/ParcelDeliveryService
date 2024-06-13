@@ -11,6 +11,7 @@
         PickedUp,
         DeadlineApproaches,
         DeadlineOver,
+        DeadlineExtended,
         InExternalStorage,
         Destroyed,
         Lost

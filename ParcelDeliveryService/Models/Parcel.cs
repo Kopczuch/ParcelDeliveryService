@@ -49,6 +49,7 @@ namespace ParcelDeliveryService.Models
         public double Price { get; set; }
         public bool PaidFor { get; set; } = false;
         public double AdditionalCosts { get; set; } = 0.0;
+        public bool CanExtend { get; set; } = true;
 
         private Size _size;
         public Size Size
@@ -125,6 +126,10 @@ namespace ParcelDeliveryService.Models
             }
         }
 
+        public void CalculateAdditionalFee()
+        {
+            AdditionalCosts = Price / 5;
+        }
 
         private void EstimateDeliveryTime()
         {

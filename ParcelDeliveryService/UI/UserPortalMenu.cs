@@ -352,7 +352,7 @@ namespace ParcelDeliveryService.UI
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"Price for the parcel: {parcel.Price}");
+            Console.WriteLine($"Price for the parcel: ${parcel.Price}");
             Console.ResetColor();
             Console.WriteLine("Press any key to pay...");
             Console.ReadKey();
