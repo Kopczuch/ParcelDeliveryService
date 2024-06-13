@@ -1,8 +1,6 @@
-using ParcelDeliveryService.Core;
 using ParcelDeliveryService.Models;
-using System;
 
-namespace ParcelDeliveryService.ChainOfResponsibility
+namespace ParcelDeliveryService.Core
 {
     
     public interface IDeadlineHandler
@@ -78,7 +76,6 @@ namespace ParcelDeliveryService.ChainOfResponsibility
         }
     }
 
-    // Step 3: Configure the chain
     public class DeadlineHandlerChain
     {
         private readonly IDeadlineHandler _rootHandler;

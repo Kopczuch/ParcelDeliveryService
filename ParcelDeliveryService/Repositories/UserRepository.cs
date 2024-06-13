@@ -18,7 +18,7 @@ namespace ParcelDeliveryService.Repositories
             _users = new List<User> {
                 new(1, "John", "Doe", "123456789", "john.doe@example.com", "password", 
                     new Address("Poland", "Warsaw", "00-001", "Main St", "1")),
-                new(2, "Jane", "Smith", "987654321", "jane.smith@example.com", "password", 
+                new(2, "Jane", "Smith", "987654321", "a", "a", 
                     new Address("Poland", "Krakow", "30-002", "Second St", "2")),
                 new(3, "Bob", "Brown", "555555555", "bob.brown@example.com", "password", 
                     new Address("Poland", "Gdansk", "80-003", "Third St", "3")),
@@ -29,7 +29,7 @@ namespace ParcelDeliveryService.Repositories
 
         public void Add(User user)
         {
-            user.Id = _users.Count;
+            user.Id = _users.Count + 1;
             _users.Add(user);
         }
 
@@ -57,7 +57,7 @@ namespace ParcelDeliveryService.Repositories
             int index = _users.FindIndex(u => u.Id == user.Id);
             if(index == -1)
             {
-                _users.Insert(index, user);
+                _users[index] = user;
             }
         }
     }

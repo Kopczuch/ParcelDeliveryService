@@ -8,6 +8,5 @@ namespace ParcelDeliveryService.Interfaces
         IList<Parcel> ListParcels();
         Parcel? GetParcel(int parcelId);
         void UpdateParcel(Parcel parcel);
-
     }
 }

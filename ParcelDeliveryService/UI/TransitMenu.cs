@@ -1,4 +1,5 @@
 ﻿using ParcelDeliveryService.Interfaces;
+using System;
 
 namespace ParcelDeliveryService.UI
 {
@@ -17,25 +18,59 @@ namespace ParcelDeliveryService.UI
 
         public void Run()
         {
-            Console.Clear();
-            Console.WriteLine("Please choose parcel for management.");
-            DisplayParcels();
+            while (true)
+            {
+                try
+                {
+                    Console.Clear();
+                    Console.WriteLine("Please choose a parcel for management.");
+                    DisplayParcels();
 
-            Console.WriteLine();
-            Console.Write("Pass parcel ID: ");
-            var parcelId = int.Parse(Console.ReadLine());
-
-            ManageParcelTransit(parcelId);
+                    Console.WriteLine();
+                    Console.Write("Enter parcel ID (or 'X' to exit): ");
+                    var input = Console.ReadLine();
+                    if (input?.ToUpper() == "X")
+                    {
+                        break;
+                    }
+                    else if (int.TryParse(input, out var parcelId))
+                    {
+                        ManageParcelTransit(parcelId);
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid parcel ID. Please enter a valid number.");
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                }
+            }
         }
 
         private void DisplayParcels()
         {
-            var parcels = _parcelService.ListParcels();
-
-            foreach (var parcel in parcels)
+            try
             {
-                Console.WriteLine();
-                parcel.Display();
+                var parcels = _parcelService.ListParcels();
+                foreach (var parcel in parcels)
+                {
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    parcel.Display();
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"An error occurred while listing parcels: {ex.Message}");
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
         }
 
@@ -43,51 +78,87 @@ namespace ParcelDeliveryService.UI
         {
             while (true)
             {
-                Console.Clear();
-                var parcel = _parcelService.GetParcel(parcelId);
-
-                if (parcel == null)
-                    return;
-
-                parcel.Display();
-                Console.WriteLine();
-                parcel.DisplayTransitHistory();
-                Console.WriteLine();
-
-                if (parcel.IsTransitFinished())
+                try
                 {
-                    Console.WriteLine("Parcel transit is finished. Press any key to continue...");
-                    Console.ReadLine();
-                    break;
-                }
+                    Console.Clear();
+                    var parcel = _parcelService.GetParcel(parcelId);
 
-                Console.WriteLine("Operations:");
-                Console.WriteLine("[1] Forward In Transit");
-                Console.WriteLine("[2] Lose parcel");
-                Console.WriteLine("[3] Destroy parcel");
-                Console.WriteLine("[0] Go Back");
-
-                Console.WriteLine();
-                Console.Write("Execute operation: ");
-                var choice = int.Parse(Console.ReadLine());
-
-                switch (choice)
-                {
-                    case 1:
-                        parcel.ForwardInTransit(_parcelService, _lockerService);
-                        break;
-
-                    case 2:
-                        parcel.Lose(_parcelService);
-                        break;
-
-                    case 3:
-                        parcel.Destroy(_parcelService);
-                        break;
-
-                    case 0:
+                    if (parcel == null)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Parcel not found. Press any key to continue...");
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.ReadLine();
                         return;
+                    }
+
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    parcel.Display();
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.WriteLine();
+                    parcel.DisplayTransitHistory();
+                    Console.WriteLine();
+
+                    if (parcel.IsTransitFinished())
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Parcel transit is finished. Press any key to continue...");
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.ReadLine();
+                        break;
+                    }
+
+                    Console.WriteLine("Operations:");
+                    Console.WriteLine("[1] Forward In Transit");
+                    Console.WriteLine("[2] Lose parcel");
+                    Console.WriteLine("[3] Destroy parcel");
+                    Console.WriteLine("[0] Go Back");
+
+                    Console.WriteLine();
+                    Console.Write("Execute operation: ");
+                    if (int.TryParse(Console.ReadLine(), out var choice))
+                    {
+                        switch (choice)
+                        {
+                            case 1:
+                                parcel.ForwardInTransit(_parcelService, _lockerService);
+                                break;
+
+                            case 2:
+                                parcel.Lose(_parcelService);
+                                break;
+
+                            case 3:
+                                parcel.Destroy(_parcelService);
+                                break;
+
+                            case 0:
+                                return;
+
+                            default:
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Invalid choice. Please select a valid operation. Press any key to continue...");
+                                Console.ForegroundColor = ConsoleColor.Gray;
+                                Console.ReadLine();
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Invalid input. Please enter a number. Press any key to continue...");
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.ReadLine();
+                    }
                 }
+                catch (Exception ex)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"An error occurred while managing the parcel: {ex.Message}. Press any key to continue...");
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.ReadLine();
+                }
+
             }
         }
     }

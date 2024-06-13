@@ -25,15 +25,14 @@ namespace ParcelDeliveryService
             // Dependencies
             var parcelRepository = new ParcelRepository();
             var lockerRepository = new LockerRepository();
+            var userRepository = new UserRepository();
 
             var parcelService = new ParcelService(parcelRepository);
-
+            var userService = new UserService(userRepository);
             var lockerService = new LockerService(lockerRepository);
             var rerouteService = new RerouteServiceDecorator(parcelService);
 
-            
-
-            var userPortalMenu = new UserPortalMenu(parcelService, lockerService,lockerRepository, rerouteService);
+            var userPortalMenu = new UserPortalMenu(parcelService, lockerService,lockerRepository, rerouteService, userService);
             var lockerMenu = new LockerMenu(lockerService, parcelService);
 
             var transitMenu = new TransitMenu(parcelService, lockerService);

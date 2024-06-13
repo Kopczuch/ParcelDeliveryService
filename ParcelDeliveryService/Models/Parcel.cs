@@ -12,21 +12,21 @@ namespace ParcelDeliveryService.Models
             State = new RegisteredState();
         }
 
-        public Parcel(string sender, string recipient, Size size, int recipientLockerId)
+        public Parcel(int senderId, int recipientId, Size size, int recipientLockerId)
         {
-            Sender = sender;
-            Recipient = recipient;
+            SenderId = senderId;
+            RecipientId = recipientId;
             Size = size;
             RecipientLockerId = recipientLockerId;
             TransitHistory = new List<TransitEvent>();
             State = new RegisteredState();
         }
 
-        public Parcel(int id, string sender, string recipient, Size size, int recipientLockerId)
+        public Parcel(int id, int senderId, int recipientId, Size size, int recipientLockerId)
         {
             Id = id;
-            Sender = sender;
-            Recipient = recipient;
+            SenderId = senderId;
+            RecipientId = recipientId;
             Size = size;
             RecipientLockerId = recipientLockerId;
             TransitHistory = new List<TransitEvent>();
@@ -36,8 +36,8 @@ namespace ParcelDeliveryService.Models
 
         public int Id { get; set; }
         public ParcelState State { get; set; }
-        public string Sender { get; set; }
-        public string Recipient { get; set; }
+        public int SenderId { get; set; }
+        public int RecipientId { get; set; }
         public DateTime EstimatedDeliveryTime { get; set; }
         public DateTime GuaranteedDeliveryTime { get; set; }
         public IList<TransitEvent> TransitHistory { get; set; }
@@ -67,14 +67,49 @@ namespace ParcelDeliveryService.Models
         // Additional services
         public void Display()
         {
-            Console.WriteLine($"Id: {Id}");
-            Console.WriteLine($"Sender: {Sender}");
-            Console.WriteLine($"Sender LockerMenu Id: {SenderLockerId}");
-            Console.WriteLine($"Recipient: {Recipient}");
-            Console.WriteLine($"Recipient LockerMenu Id: {RecipientLockerId}");
-            Console.WriteLine($"Size: {Size}");
-            Console.WriteLine($"Estimated Delivery Time: {EstimatedDeliveryTime:d}");
-            Console.WriteLine($"Guaranteed Delivery Time: {GuaranteedDeliveryTime:d}");
+            Console.WriteLine("Parcel Information");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write($"Id: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{Id}");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Sender: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{SenderId}");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Sender LockerMenu Id: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{SenderLockerId}");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Recipient: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{RecipientId}");
+
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Recipient LockerMenu Id: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{RecipientLockerId}");
+            
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Size: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{Size}");
+            
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Estimated Delivery Time: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{EstimatedDeliveryTime:d}");
+            
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write("Guaranteed Delivery Time: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"{GuaranteedDeliveryTime:d}");
+            Console.ResetColor();
+            Console.WriteLine("-------------------------------------------------");
         }
 
         public void DisplayTransitHistory()
