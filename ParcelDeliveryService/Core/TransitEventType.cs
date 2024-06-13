@@ -9,7 +9,6 @@
         InTransit,
         ReadyForPickUp,
         PickedUp,
-        DeadlineApproaches,
         DeadlineOver,
         DeadlineExtended,
         InExternalStorage,
