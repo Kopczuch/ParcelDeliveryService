@@ -14,7 +14,6 @@ namespace ParcelDeliveryService.Core
 
         public void Reroute(Parcel parcel, int newLockerId)
         {
-            // Add a reroute event to the parcel's transit history
             parcel.TransitHistory.Add(new TransitEvent
             {
                 TimeStamp = DateTime.Now,
@@ -22,10 +21,8 @@ namespace ParcelDeliveryService.Core
                 Type = TransitEventType.InTransit
             });
 
-            // Update the parcel's recipient locker ID
             parcel.RecipientLockerId = newLockerId;
 
-            // Update the parcel in the parcel service
             _parcelService.UpdateParcel(parcel);
         }
     }
