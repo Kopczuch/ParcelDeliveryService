@@ -164,14 +164,14 @@ namespace ParcelDeliveryService.Models
             State.HandleForwardInTransit(this, parcelService, lockerService);
         }
 
-        public void Lose(IParcelService parcelService)
+        public void Lose(IParcelService parcelService, ILockerService lockerService)
         {
-            State.Lose(this, parcelService);
+            State.Lose(this, parcelService, lockerService);
         }
 
-        public void Destroy(IParcelService parcelService)
+        public void Destroy(IParcelService parcelService, ILockerService lockerService)
         {
-            State.Destroy(this, parcelService);
+            State.Destroy(this, parcelService, lockerService);
         }
 
         public bool IsTransitFinished()

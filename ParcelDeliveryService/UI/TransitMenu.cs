@@ -40,15 +40,17 @@ namespace ParcelDeliveryService.UI
                     else
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Invalid parcel ID. Please enter a valid number.");
+                        Console.WriteLine("Invalid parcel ID. Please enter a valid number. Press any key to continue...");
                         Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.ReadLine();
                     }
                 }
                 catch (Exception ex)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    Console.WriteLine($"An error occurred: {ex.Message} Press any key to continue...");
                     Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.ReadLine();
                 }
             }
         }
@@ -69,8 +71,9 @@ namespace ParcelDeliveryService.UI
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"An error occurred while listing parcels: {ex.Message}");
+                Console.WriteLine($"An error occurred while listing parcels: {ex.Message} Press any key to continue...");
                 Console.ForegroundColor = ConsoleColor.Gray;
+                Console.ReadLine();
             }
         }
 
@@ -125,11 +128,11 @@ namespace ParcelDeliveryService.UI
                                 break;
 
                             case 2:
-                                parcel.Lose(_parcelService);
+                                parcel.Lose(_parcelService, _lockerService);
                                 break;
 
                             case 3:
-                                parcel.Destroy(_parcelService);
+                                parcel.Destroy(_parcelService, _lockerService);
                                 break;
 
                             case 0:
@@ -154,7 +157,7 @@ namespace ParcelDeliveryService.UI
                 catch (Exception ex)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"An error occurred while managing the parcel: {ex.Message}. Press any key to continue...");
+                    Console.WriteLine($"An error occurred while managing the parcel: {ex.Message} Press any key to continue...");
                     Console.ForegroundColor = ConsoleColor.Gray;
                     Console.ReadLine();
                 }

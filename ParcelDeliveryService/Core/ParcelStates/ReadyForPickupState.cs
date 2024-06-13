@@ -14,14 +14,18 @@ namespace ParcelDeliveryService.Core.ParcelStates
             command.Execute(parcel);
         }
 
-        public override void Lose(Parcel parcel, IParcelService parcelService)
+        public override void Lose(Parcel parcel, IParcelService parcelService, ILockerService lockerService)
         {
             Console.WriteLine("Parcel cannot be lost.\n");
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadLine();
         }
 
-        public override void Destroy(Parcel parcel, IParcelService parcelService)
+        public override void Destroy(Parcel parcel, IParcelService parcelService, ILockerService lockerService)
         {
             Console.WriteLine("Parcel cannot be destroyed.\n");
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadLine();
         }
     }
 }

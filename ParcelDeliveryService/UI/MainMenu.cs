@@ -62,8 +62,9 @@ namespace ParcelDeliveryService.UI
                 catch (Exception ex)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    Console.WriteLine($"An error occurred: {ex.Message} Press any key to continue...");
                     Console.ResetColor();
+                    Console.ReadLine();
                 }
                 finally
                 {

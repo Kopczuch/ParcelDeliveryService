@@ -51,13 +51,15 @@ namespace ParcelDeliveryService.UI
                             return;
 
                         default:
-                            Console.WriteLine("Invalid option. Please try again.");
+                            Console.WriteLine("Invalid option. Please try again. Press any key to continue...");
+                            Console.ReadLine();
                             break;
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input. Please enter a number.");
+                    Console.WriteLine("Invalid input. Please enter a number. Press any key to continue...");
+                    Console.ReadLine();
                 }
             }
         }
@@ -98,7 +100,8 @@ namespace ParcelDeliveryService.UI
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message} Press any key to continue...");
+                Console.ReadLine();
             }
         }
 
@@ -125,10 +128,19 @@ namespace ParcelDeliveryService.UI
                     return;
                 }
 
+                if (parcel.CurrentState != TransitEventType.Registered)
+                {
+                    Console.WriteLine("Package was already deposited. Press any key to continue...");
+                    Console.ReadLine();
+
+                    return;
+                }
+
                 var availableLockers = _lockerService.GetVacantLockers();
                 if (!availableLockers.Any())
                 {
-                    Console.WriteLine("No available lockers.");
+                    Console.WriteLine("No available lockers. Press any key to continue...");
+                    Console.ReadLine();
                     return;
                 }
 
@@ -138,7 +150,8 @@ namespace ParcelDeliveryService.UI
                 Console.Write("Pass chosen locker ID: ");
                 if (!int.TryParse(Console.ReadLine(), out var chosenLockerId))
                 {
-                    Console.WriteLine("Invalid locker ID. Please enter a valid number.");
+                    Console.WriteLine("Invalid locker ID. Please enter a valid number. Press any key to continue...");
+                    Console.ReadLine();
                     return;
                 }
 
@@ -155,7 +168,8 @@ namespace ParcelDeliveryService.UI
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message} Press any key to continue...");
+                Console.ReadLine();
             }
         }
 
@@ -249,7 +263,8 @@ namespace ParcelDeliveryService.UI
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message} Press any key to continue...");
+                Console.ReadLine();
             }
         }
 
@@ -270,7 +285,15 @@ namespace ParcelDeliveryService.UI
                 Console.Write("Locker Id: ");
                 if (!int.TryParse(Console.ReadLine(), out var lockerId))
                 {
-                    Console.WriteLine("Invalid locker ID. Please enter a valid number.");
+                    Console.WriteLine("Invalid locker ID. Please enter a valid number. Press any key to continue...");
+                    Console.ReadLine();
+                    return;
+                }
+
+                if (lockers.All(l => l.Id != lockerId))
+                {
+                    Console.WriteLine("No locker with this id. Press any key to continue...");
+                    Console.ReadLine();
                     return;
                 }
 
@@ -304,7 +327,8 @@ namespace ParcelDeliveryService.UI
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message} Press any key to continue...");
+                Console.ReadLine();
             }
         }
 
@@ -316,7 +340,8 @@ namespace ParcelDeliveryService.UI
                 Console.WriteLine("Pass parcel id: ");
                 if (!int.TryParse(Console.ReadLine(), out var externalStorageParcelId))
                 {
-                    Console.WriteLine("Invalid locker ID. Please enter a valid number.");
+                    Console.WriteLine("Invalid parcel ID. Please enter a valid number. Press any key to continue...");
+                    Console.ReadLine();
                     return;
                 }
 
@@ -339,7 +364,8 @@ namespace ParcelDeliveryService.UI
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Console.WriteLine($"An error occurred: {ex.Message} Press any key to continue...");
+                Console.ReadLine();
             }
         }
 

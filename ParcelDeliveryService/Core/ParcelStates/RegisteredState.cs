@@ -10,19 +10,22 @@ namespace ParcelDeliveryService.Core.ParcelStates
         public override void HandleForwardInTransit(Parcel parcel, IParcelService parcelService, ILockerService lockerService)
         {
             Console.WriteLine("Parcel has not been deposited yet.\n");
+            Console.WriteLine("Press any key to continue...");
             Console.ReadLine();
         }
 
-        public override void Lose(Parcel parcel, IParcelService parcelService)
+        public override void Lose(Parcel parcel, IParcelService parcelService, ILockerService lockerService)
         {
             Console.WriteLine("Parcel cannot be lost since it has not been deposited yet.\n");
+            Console.WriteLine("Press any key to continue...");
             Console.ReadLine();
 
         }
 
-        public override void Destroy(Parcel parcel, IParcelService parcelService)
+        public override void Destroy(Parcel parcel, IParcelService parcelService, ILockerService lockerService)
         {
             Console.WriteLine("Parcel cannot be destroyed since it has not been deposited yet.\n");
+            Console.WriteLine("Press any key to continue...");
             Console.ReadLine();
         }
     }

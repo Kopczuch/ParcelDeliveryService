@@ -9,7 +9,7 @@ namespace ParcelDeliveryService.Core.ParcelStates
 
         public override void HandleForwardInTransit(Parcel parcel, IParcelService parcelService, ILockerService lockerService)
         {
-            base.Destroy(parcel, parcelService);
+            base.Destroy(parcel, parcelService, lockerService);
         }
     }
 }

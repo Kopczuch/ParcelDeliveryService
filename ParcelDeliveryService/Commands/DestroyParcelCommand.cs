@@ -5,14 +5,14 @@ using ParcelDeliveryService.Models;
 
 namespace ParcelDeliveryService.Commands
 {
-    public class DestroyParcelCommand(IParcelService parcelService) : IChangeParcelStateCommand
+    public class DestroyParcelCommand(IParcelService parcelService, ILockerService lockerService) : IChangeParcelStateCommand
     {
         public void Execute(Parcel parcel)
         {
             var transitEvent = new TransitEvent
             {
                 TimeStamp = DateTime.Now,
-                Location = "In External Storage",
+                Location = "Trash",
                 Type = TransitEventType.Destroyed
             };
 
@@ -20,6 +20,14 @@ namespace ParcelDeliveryService.Commands
             parcel.TransitHistory.Add(transitEvent);
 
             parcelService.UpdateParcel(parcel);
+
+            OnDestroyParcel(parcel);
+        }
+
+        private void OnDestroyParcel(Parcel parcel)
+        {
+            lockerService.ReceiveFromLocker(parcel.Id, parcel.RecipientLockerId);
+            lockerService.ReceiveFromLocker(parcel.Id, parcel.SenderLockerId!.Value);
         }
     }
 }

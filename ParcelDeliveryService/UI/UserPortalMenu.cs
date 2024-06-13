@@ -71,8 +71,9 @@ namespace ParcelDeliveryService.UI
 
                             default:
                                 Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("Invalid option. Please choose a valid operation.");
+                                Console.WriteLine("Invalid option. Please choose a valid operation. Press any key to continue...");
                                 Console.ResetColor();
+                                Console.ReadLine();
                                 break;
                         }
                     }
@@ -80,8 +81,9 @@ namespace ParcelDeliveryService.UI
                 catch (Exception ex)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    Console.WriteLine($"An error occurred: {ex.Message} Press any key to continue...");
                     Console.ResetColor();
+                    Console.ReadLine();
                 }
                 
             }
@@ -154,8 +156,9 @@ namespace ParcelDeliveryService.UI
                 if (!int.TryParse(Console.ReadLine(), out var slotsToAdd))
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Invalid number of slots.");
+                    Console.WriteLine("Invalid number of slots. Press any key to continue...");
                     Console.ResetColor();
+                    Console.ReadLine();
                     return;
                 }
 
@@ -181,14 +184,16 @@ namespace ParcelDeliveryService.UI
 
                 _lockerRepository.Update(selectedLocker);
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"Locker #{lockerId} expanded successfully.");
+                Console.WriteLine($"Locker #{lockerId} expanded successfully. Press any key to continue...");
                 Console.ResetColor();
+                Console.ReadLine();
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"An error occurred while expanding the locker: {ex.Message}");
+                Console.WriteLine($"An error occurred while expanding the locker: {ex.Message} Press any key to continue...");
                 Console.ResetColor();
+                Console.ReadLine();
             }
         }
 
@@ -202,8 +207,9 @@ namespace ParcelDeliveryService.UI
                 if (sender == null)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("You must sign in before registering a parcel.");
+                    Console.WriteLine("You must sign in before registering a parcel. Press any key to continue...");
                     Console.ResetColor();
+                    Console.ReadLine();
                     return;
                 }
 
@@ -363,8 +369,9 @@ namespace ParcelDeliveryService.UI
                 if (!int.TryParse(Console.ReadLine(), out var id))
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Invalid parcel ID.");
+                    Console.WriteLine("Invalid parcel ID. Press any key to continue...");
                     Console.ResetColor();
+                    Console.ReadLine();
                     return;
                 }
 
@@ -372,19 +379,24 @@ namespace ParcelDeliveryService.UI
                 if (parcel == null)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Parcel not found.");
+                    Console.WriteLine("Parcel not found. Press any key to continue...");
                     Console.ResetColor();
+                    Console.ReadLine();
                     return;
                 }
 
                 parcel.Display();
                 parcel.DisplayTransitHistory();
+
+                Console.WriteLine("\nPress any key to continue...");
+                Console.ReadLine();
             }
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"An error occurred while tracking the parcel: {ex.Message}");
+                Console.WriteLine($"An error occurred while tracking the parcel: {ex.Message} Press any key to continue...");
                 Console.ResetColor();
+                Console.ReadLine();
             }
         }
 
